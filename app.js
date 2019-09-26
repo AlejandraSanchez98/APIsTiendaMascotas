@@ -1,0 +1,99 @@
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+
+//var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+var categoriaRouter = require('./routes/Categoria/controllers/Categorias');
+var proveedoresRouter = require('./routes/Proveedores/controllers/proveedores');
+var vendedoresRouter = require('./routes/Vendedores/controllers/vendedores');
+var reportesRouter = require('./routes/Reportes/controllers/reportes');
+var enviosRouter = require('./routes/Envios/controllers/envios');
+var clientesRouter = require('./routes/Clientes/controllers/clientes');
+var usuariosRouter = require('./routes/Usuarios/controllers/usuarios');
+var comprasRouter = require('./routes/Compras/controllers/compras');
+var productosRouter = require('./routes/Productos/controllers/productos');
+var metodoPagoRouter = require('./routes/MetodoPago/controllers/metodoPago');
+var ventasRouter = require('./routes/Ventas/controllers/ventas');
+var accesosRouter = require('./routes/Accesos/controllers/accesos');
+var detalleVentaRouter = require('./routes/DetalleVenta/controllers/detalleVenta');
+var montoTotalVentasRouter = require('./routes/Reportes/controllers/montoTotalVentas');
+var montoTotalComprasRouter = require('./routes/Reportes/controllers/montoTotalCompras');
+var utilidadRouter = require('./routes/Reportes/controllers/calcularUtilidad');
+var productosMasVendidosRouter = require('./routes/Reportes/controllers/productosMasVendidos');
+var vendedoresMasVentasRouter = require('./routes/Reportes/controllers/vendedoresMasVentas');
+var productoStockMinimoRouter = require('./routes/Reportes/controllers/productoStockMinimo');
+
+//importar dependencias para poder usar mysql
+var mysqlConnection = require('express-myconnection');
+var mysql = require('mysql');
+
+//importar body parser
+var bodyParser = require('body-parser');
+
+var app = express();
+
+app.use(mysqlConnection(mysql, {
+	host: 'localhost',
+	user: 'root',
+	password: '',
+	database: 'tiendaMascotas'
+}, 'request'));
+
+//usar body parser en mi aplicación express en formato json
+app.use(bodyParser.json());
+
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/categoria', categoriaRouter);
+app.use('/proveedores', proveedoresRouter);
+app.use('/vendedores', vendedoresRouter);
+app.use('/reportes',reportesRouter);
+app.use('/envios',enviosRouter);
+app.use('/clientes',clientesRouter);
+app.use('/usuarios',usuariosRouter);
+app.use('/compras', comprasRouter);
+app.use('/productos', productosRouter);
+app.use('/metodoPago', metodoPagoRouter);
+app.use('/ventas',ventasRouter);
+app.use('/accesos',accesosRouter);
+app.use('/detalleVenta',detalleVentaRouter);
+app.use('/montoTotalVentas',montoTotalVentasRouter);
+app.use('/montoTotalCompras',montoTotalComprasRouter);
+app.use('/utilidad',utilidadRouter);
+app.use('/productosMasVendidos',productosMasVendidosRouter);
+app.use('/vendedoresMasVentas',vendedoresMasVentasRouter);
+app.use('/productoStockMinimo', productoStockMinimoRouter);
+
+//app.use('/', indexRouter);
+app.use('/users', usersRouter);
+
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+module.exports = app;

@@ -1,0 +1,9 @@
+while(i<arregloVentas){
+ if(arreglo[i].nombre == perron){
+	perron ++
+ }
+ if(arreglo[i].nombre == pedigree){
+	pedigree ++
+ }
+
+}
