@@ -6,7 +6,7 @@ create database  tiendaMascotas;
 use tiendaMascotas;
 --Creación de tablas
 
-/*create table Categoria(
+create table Categoria(
 idCategoria  int auto_increment,
 nombreCategoria varchar(50),
 subCategoria varchar(50),
@@ -133,7 +133,7 @@ fechaActualizacion datetime default now(),
 estado tinyint(2) default 1,
 primary key (idEnvio));*/
 
-/*create table DetalleVenta(
+create table DetalleVenta(
 idDetalleVenta int auto_increment,
 direccion varchar(50),
 ciudad varchar(20),
@@ -158,7 +158,7 @@ passwordCliente BLOB,
 fechaRegistro datetime default now(),
 fechaActualizacion datetime default now(),
 estado tinyint(2) default 1,
-primary key (idCliente));*/
+primary key (idCliente));
 
 
 create table Devoluciones(
@@ -167,7 +167,7 @@ fechaDevolucion datetime default now(),
 montoSinIVA numeric(6,2),
 IVA numeric(6,2),
 montoConIVA numeric(6,2),
-tipoDevolucion varchar(25),
+tipoDevolucion varchar(250),
 motivoDevolucion varchar(100),
 fechaRegistro datetime default now(),
 fechaActualizacion datetime default now(),
@@ -177,7 +177,7 @@ primary key (idDevolucion, idCliente),
 foreign key (idCliente) references Clientes (idCliente) on delete cascade);
 
 
-/*create table BitacoraAccesos(
+create table BitacoraAccesos(
 idAcceso int auto_increment,
 accion varchar(10),
 fechaRegistro datetime default now(),
@@ -185,7 +185,7 @@ fechaActualizacion datetime default now(),
 estado tinyint(2) default 1,
 idUsuario int, 
 primary key (idAcceso),
-foreign key (idUsuario) references Usuarios (idUsuario) on delete cascade);*/
+foreign key (idUsuario) references Usuarios (idUsuario) on delete cascade);
 
 
 --Tablas de las relaciones
@@ -244,19 +244,3 @@ UPDATE Productos INNER JOIN ( SELECT idProducto, SUM(cantidad) cantidad FROM pro
 --(funciono) SELECT * FROM Ventas WHERE MONTH(fechaRegistro) < MONTH(CURDATE());
 
 
-
-
-
-
-
-SELECT 
-
-SELECT  p.idProducto, p.nombreProducto AS Producto, SUM(pv.cantidad) AS TotalVentas FROM productos_ventas pv  INNER JOIN Productos p ON pv.idProducto = p.idProducto WHERE p.estado = 1  GROUP BY pv.idProducto, p.nombreProducto ORDER BY SUM(pv.cantidad)  DESC  LIMIT 0 , 5 ;
-
-
-UPDATE Productos SET stock = stock - @cantidad  WHERE idProducto = @idProducto
-
-
-
-
-UPDATE tabla1 T1 LEFT JOIN ( SELECT descripcion, SUM(parcial) total  FROM tabla2 GROUP BY descripcion ) T2 ON T1.descripcion = T2.descripcion SET T1.total = T2.total;

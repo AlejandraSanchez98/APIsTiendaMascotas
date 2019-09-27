@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 //requerir el modelo
-var comprasModel = require('../models/comprasModel');
+var devolucionesModel = require('../models/devolucionesModel');
 
 router.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -9,11 +9,11 @@ router.use(function (req, res, next) {
 	next();
 });
 
-//obtener todos los registos de la tabla compras
-router.get('/listarCompras', function (req, res, next) {
+//obtener todas las devoluciones
+router.get('/listarDevoluciones', function (req, res, next) {
 	try {
 		//web service
-		comprasModel.listarCompras(req).then(
+		devolucionesModel.listarDevoluciones(req).then(
 			(success) => {
 				res.json(success);
 			},
@@ -27,11 +27,11 @@ router.get('/listarCompras', function (req, res, next) {
 	}
 });
 
-//Agregar un nuevo compra
-router.post('/agregarCompra', function (req, res, next) {
+//Agregar una nueva devolución
+router.post('/agregarDevolucion', function (req, res, next) {
 	try {
 		//web service
-		comprasModel.agregarCompra(req).then(
+		devolucionesModel.agregarDevolucion(req).then(
 			(success) => {
 				res.json(success);
 			},
@@ -45,10 +45,10 @@ router.post('/agregarCompra', function (req, res, next) {
 	}
 });
 
-//modificar una compra existente
-router.put('/modificarCompra/:idCompra', function (req, res, next) {
+//modificar devolución existente
+router.put('/modificarDevolucion/:idDevolucion', function (req, res, next) {
 	try {
-		comprasModel.modificarCompra(req).then(
+		devolucionesModel.modificarDevolucion(req).then(
 			(success) => {
 				res.json(success);
 			},
@@ -62,10 +62,10 @@ router.put('/modificarCompra/:idCompra', function (req, res, next) {
 	}
 });
 
-//eliminar una compra existente
-router.delete('/eliminarCompra/:idCompra', function (req, res, next) {
+//eliminar una devolución existente
+router.delete('/eliminarDevolucion/:idDevolucion', function (req, res, next) {
 	try {
-		comprasModel.eliminarCompra(req).then(
+		devolucionesModel.eliminarDevolucion(req).then(
 			(success) => {
 				res.json(success);
 			},

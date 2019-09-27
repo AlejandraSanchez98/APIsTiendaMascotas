@@ -9,7 +9,6 @@ var usersRouter = require('./routes/users');
 var categoriaRouter = require('./routes/Categoria/controllers/Categorias');
 var proveedoresRouter = require('./routes/Proveedores/controllers/proveedores');
 var vendedoresRouter = require('./routes/Vendedores/controllers/vendedores');
-var reportesRouter = require('./routes/Reportes/controllers/reportes');
 var enviosRouter = require('./routes/Envios/controllers/envios');
 var clientesRouter = require('./routes/Clientes/controllers/clientes');
 var usuariosRouter = require('./routes/Usuarios/controllers/usuarios');
@@ -27,6 +26,7 @@ var productosMasVendidosRouter = require('./routes/Reportes/controllers/producto
 var vendedoresMasVentasRouter = require('./routes/Reportes/controllers/vendedoresMasVentas');
 var productoStockMinimoRouter = require('./routes/Reportes/controllers/productoStockMinimo');
 var restarStockRouter = require('./routes/Productos/controllers/restarStock');
+
 //importar dependencias para poder usar mysql
 var mysqlConnection = require('express-myconnection');
 var mysql = require('mysql');
@@ -60,7 +60,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/categoria', categoriaRouter);
 app.use('/proveedores', proveedoresRouter);
 app.use('/vendedores', vendedoresRouter);
-app.use('/reportes',reportesRouter);
 app.use('/envios',enviosRouter);
 app.use('/clientes',clientesRouter);
 app.use('/usuarios',usuariosRouter);
@@ -78,6 +77,8 @@ app.use('/productosMasVendidos',productosMasVendidosRouter);
 app.use('/vendedoresMasVentas',vendedoresMasVentasRouter);
 app.use('/productoStockMinimo', productoStockMinimoRouter);
 app.use('/restarStock',restarStockRouter);
+
+
 //app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
