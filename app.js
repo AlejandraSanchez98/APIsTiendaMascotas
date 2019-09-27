@@ -25,7 +25,7 @@ var utilidadRouter = require('./routes/Reportes/controllers/calcularUtilidad');
 var productosMasVendidosRouter = require('./routes/Reportes/controllers/productosMasVendidos');
 var vendedoresMasVentasRouter = require('./routes/Reportes/controllers/vendedoresMasVentas');
 var productoStockMinimoRouter = require('./routes/Reportes/controllers/productoStockMinimo');
-
+var restarStockRouter = require('./routes/Productos/controllers/restarStock');
 //importar dependencias para poder usar mysql
 var mysqlConnection = require('express-myconnection');
 var mysql = require('mysql');
@@ -75,7 +75,7 @@ app.use('/utilidad',utilidadRouter);
 app.use('/productosMasVendidos',productosMasVendidosRouter);
 app.use('/vendedoresMasVentas',vendedoresMasVentasRouter);
 app.use('/productoStockMinimo', productoStockMinimoRouter);
-
+app.use('/restarStock',restarStockRouter);
 //app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
