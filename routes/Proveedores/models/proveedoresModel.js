@@ -98,7 +98,7 @@ exports.modificarProveedor = function (req) {
 			}
 			else {
 
-				let query = `update Proveedores set ? where idProveedor = ${idProveedor}`;
+				let query = `update Proveedores set ? where idProveedor = '${idProveedor}'`;
 
 				let request_body = {
           nombreProveedor: body.nombreProveedor,
@@ -143,7 +143,7 @@ exports.modificarProveedor = function (req) {
  			}
  			else {
 
- 				let query = `update Proveedores set ? where idProveedor = ${idProveedor}`;
+ 				let query = `update Proveedores set ? where idProveedor = '${idProveedor}'`;
 
  				let request_body = {
  					estado: 0

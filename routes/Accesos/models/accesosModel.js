@@ -93,7 +93,7 @@ exports.modificarAcceso = function (req) {
 			}
 			else {
 
-				let query = `update BitacoraAccesos set ? where idAcceso = ${idAcceso}`;
+				let query = `update BitacoraAccesos set ? where idAcceso = '${idAcceso}'`;
 
 				let request_body = {
           accion: body.accion,
@@ -133,7 +133,7 @@ exports.modificarAcceso = function (req) {
  			}
  			else {
 
- 				let query = `update BitacoraAccesos set ? where idAcceso = ${idAcceso}`;
+ 				let query = `update BitacoraAccesos set ? where idAcceso = '${idAcceso}'`;
 
  				let request_body = {
  					estado: 0

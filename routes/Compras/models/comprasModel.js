@@ -59,8 +59,7 @@ exports.agregarCompra = function (req) {
           IVA: body.IVA,
           montoConIVA: body.montoConIVA,
           idProveedor: body.idProveedor,
-          idUsuario:body.idUsuario,
-					numReporte:body.numReporte
+          idUsuario:body.idUsuario
 				};
 				database.query(query, request_body, function (error, success) {
 					if (error) {
@@ -97,15 +96,14 @@ exports.modificarCompra = function (req) {
 			}
 			else {
 
-				let query = `update Compras set ? where idCompra = ${idCompra}`;
+				let query = `update Compras set ? where idCompra = '${idCompra}'`;
 
 				let request_body = {
           montoSinIVA: body.montoSinIVA,
           IVA: body.IVA,
           montoConIVA: body.montoConIVA,
           idProveedor: body.idProveedor,
-          idUsuario:body.idUsuario,
-					numReporte:body.numReporte
+          idUsuario:body.idUsuario
 				};
 				database.query(query, request_body, function (error, success) {
 					if (error) {
@@ -141,7 +139,7 @@ exports.modificarCompra = function (req) {
  			}
  			else {
 
- 				let query = `update Compras set ? where idCompra = ${idCompra}`;
+ 				let query = `update Compras set ? where idCompra = '${idCompra}'`;
 
  				let request_body = {
  					estado: 0

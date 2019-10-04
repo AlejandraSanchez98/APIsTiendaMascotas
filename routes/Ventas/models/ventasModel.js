@@ -9,7 +9,7 @@ exports.listarVentas = function (req) {
 				});
 			}
 			else {
-				var query = 'select * from Ventas where estado = 1';
+				var query = 'SELECT v.idVenta, v.montoSinIVA, v.IVA, v.montoConIVA,pv.idProducto,pv.cantidadProducto,v.fechaRegistro, v.fechaActualizacion, v.estado,v.idVendedor,c.idCliente,mp.idMetodoPago FROM Ventas v INNER JOIN productos_ventas pv  ON  v.idVenta=pv.idVenta INNER JOIN ventas_clientes c ON v.idVenta=c.idVenta INNER JOIN ventas_metodoPago mp ON v.idVenta=mp.idVenta WHERE v.estado = 1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -42,7 +42,7 @@ exports.listarVentas = function (req) {
 exports.agregarVenta = function (req) {
 	return new Promise((resolve, reject) => {
 
-		let body = req.body;
+
 		req.getConnection(function (error, database) {
 			if (error) {
 				reject({
@@ -51,18 +51,18 @@ exports.agregarVenta = function (req) {
 				});
 			}
 			else {
+				let montoSinIVA = req.body.montoSinIVA;
+				let IVA = req.body.IVA;
+				let montoConIVA = req.body.montoConIVA;
+				let idVendedor = req.body.idVendedor;
+				let idProducto = req.body.idProducto;
+				let cantidadProducto = req.body.cantidadProducto;
+				let idCliente = req.body.idCliente;
+				let idMetodoPago = req.body.idMetodoPago;
+				let query = `CALL realizarInsercion( ${montoSinIVA},${IVA},${montoConIVA},${idVendedor},${idProducto},${cantidadProducto},${idCliente},${idMetodoPago})`;
 
-				let query = 'insert into Ventas set ?';
 
-				let request_body = {
-          montoSinIVA: body.montoSinIVA,
-          IVA: body.IVA,
-          montoConIVA: body.montoConIVA,
-          idVendedor: body.idVendedor,
-          numReporte:body.numReporte,
-          idMetodoPago:body.idMetodoPago
-				};
-				database.query(query, request_body, function (error, success) {
+				database.query(query, function (error, success) {
 					if (error) {
 						reject({
 							estatus: -1,
@@ -86,7 +86,6 @@ exports.agregarVenta = function (req) {
 exports.modificarVenta = function (req) {
 	return new Promise((resolve, reject) => {
 
-		let body = req.body;
 		let idVenta = req.params.idVenta;
 		req.getConnection(function (error, database) {
 			if (error) {
@@ -96,18 +95,17 @@ exports.modificarVenta = function (req) {
 				});
 			}
 			else {
+				let montoSinIVA = req.body.montoSinIVA;
+				let IVA = req.body.IVA;
+				let montoConIVA = req.body.montoConIVA;
+				let idVendedor = req.body.idVendedor;
+				let idProducto = req.body.idProducto;
+				let cantidadProducto = req.body.cantidadProducto;
+				let idCliente = req.body.idCliente;
+				let idMetodoPago = req.body.idMetodoPago;
+				let query =  `CALL realizarModificacion(${montoSinIVA},${IVA},${montoConIVA},${idVendedor},${idProducto},${cantidadProducto},${idCliente},${idMetodoPago})`;
 
-				let query = `update Ventas set ? where idVenta = ${idVenta}`;
-
-				let request_body = {
-          montoSinIVA: body.montoSinIVA,
-          IVA: body.IVA,
-          montoConIVA: body.montoConIVA,
-          idVendedor: body.idVendedor,
-          numReporte:body.numReporte,
-          idMetodoPago:body.idMetodoPago
-				};
-				database.query(query, request_body, function (error, success) {
+				database.query(query, function (error, success) {
 					if (error) {
 						reject({
 							estatus: -1,

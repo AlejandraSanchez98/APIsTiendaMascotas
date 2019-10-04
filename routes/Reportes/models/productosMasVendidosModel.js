@@ -9,7 +9,7 @@ exports.productosMasVendidos = function (req) {
 				});
 			}
 			else {
-				var query = 'SELECT  pv.idProducto, p.nombreProducto AS Producto, SUM(pv.cantidad) AS TotalVentas FROM productos_ventas pv  INNER JOIN Productos p ON pv.idProducto = p.idProducto WHERE p.estado = 1  GROUP BY pv.idProducto, p.nombreProducto ORDER BY SUM(pv.cantidad)  DESC  LIMIT 0 , 5 ';
+				var query = 'SELECT  pv.idProducto, p.nombreProducto AS Producto, SUM(pv.cantidadProducto) AS TotalVentas FROM productos_ventas pv  INNER JOIN Productos p ON pv.idProducto = p.idProducto WHERE p.estado = 1  GROUP BY pv.idProducto, p.nombreProducto ORDER BY SUM(pv.cantidadProducto)  DESC  LIMIT 0 , 5 ';
 
 				database.query(query, function (error, success) {
 					if (error) {

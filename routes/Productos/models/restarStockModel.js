@@ -11,7 +11,7 @@ exports.restarStock = function (req) {
 			}
 			else {
 
-				let query = 'UPDATE Productos INNER JOIN ( SELECT idProducto, SUM(cantidad) cantidad FROM productos_ventas GROUP BY idProducto ) productos_ventas ON Productos.idProducto = productos_ventas.idProducto  SET Productos.stock = Productos.stock - productos_ventas.cantidad WHERE Productos.estado = 1;';
+				let query = 'UPDATE Productos INNER JOIN ( SELECT idProducto, SUM(cantidadProducto) cantidadProducto FROM productos_ventas GROUP BY idProducto ) productos_ventas ON Productos.idProducto = productos_ventas.idProducto  SET Productos.stock = Productos.stock - productos_ventas.cantidadProducto WHERE Productos.estado = 1;';
 
 				database.query(query,function (error, success) {
 					if (error) {

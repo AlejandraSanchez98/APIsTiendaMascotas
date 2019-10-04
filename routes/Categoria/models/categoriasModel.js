@@ -94,7 +94,7 @@ exports.modificarCategoria = function (req) {
 			}
 			else {
 
-				let query = `update Categoria set ? where idCategoria = ${idCategoria}`;
+				let query = `update Categoria set ? where idCategoria = '${idCategoria}'`;
 
 				let request_body = {
 					nombreCategoria: body.nombreCategoria,
@@ -135,7 +135,7 @@ exports.modificarCategoria = function (req) {
  			}
  			else {
 
- 				let query = `update Categoria set ? where idCategoria = ${idCategoria}`;
+ 				let query = `update Categoria set ? where idCategoria = '${idCategoria}'`;
 
  				let request_body = {
  					estado: 0

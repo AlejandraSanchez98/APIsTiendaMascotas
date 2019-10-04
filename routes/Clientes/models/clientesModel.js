@@ -97,7 +97,7 @@ exports.modificarCliente = function (req) {
 			}
 			else {
 
-				let query = `update Clientes set ? where idCliente = ${idCliente}`;
+				let query = `update Clientes set ? where idCliente = ' ${idCliente}'`;
 
 				let request_body = {
           nombreCliente: body.nombreCliente,
@@ -141,7 +141,7 @@ exports.modificarCliente = function (req) {
  			}
  			else {
 
- 				let query = `update Clientes set ? where idCliente = ${idCliente}`;
+ 				let query = `update Clientes set ? where idCliente = '${idCliente}'`;
 
  				let request_body = {
  					estado: 0

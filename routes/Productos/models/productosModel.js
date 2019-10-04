@@ -98,7 +98,7 @@ exports.modificarProducto = function (req) {
 			}
 			else {
 
-				let query = `update Productos set ? where idProducto = ${idProducto}`;
+				let query = `update Productos set ? where idProducto = '${idProducto}'`;
 
 				let request_body = {
           nombreProducto: body.nombreProducto,
@@ -143,7 +143,7 @@ exports.modificarProducto = function (req) {
  			}
  			else {
 
- 				let query = `update Productos set ? where idProducto = ${idProducto}`;
+ 				let query = `update Productos set ? where idProducto = '${idProducto}'`;
 
  				let request_body = {
  					estado: 0

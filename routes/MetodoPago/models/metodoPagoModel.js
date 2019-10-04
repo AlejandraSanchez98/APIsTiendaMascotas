@@ -1,5 +1,5 @@
-//obtener todas las devoluciones
-exports.listarDevoluciones = function (req) {
+//obtener todos los registos de la tabla metodo de pago
+exports.listarMetodosPago = function (req) {
 	return new Promise((resolve, reject) => {
 		req.getConnection(function (error, database) {
 			if (error) {
@@ -9,7 +9,7 @@ exports.listarDevoluciones = function (req) {
 				});
 			}
 			else {
-				var query = 'select * from Devoluciones where estado = 1';
+				var query = 'select * from MetodoPago where estado = 1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -38,8 +38,8 @@ exports.listarDevoluciones = function (req) {
 	});
 }
 
-//Agregar una nueva devolución
-exports.agregarDevolucion = function (req) {
+//Agregar un nuevo metodo de pago
+exports.agregarMetodoPago = function (req) {
 	return new Promise((resolve, reject) => {
 
 		let body = req.body;
@@ -52,15 +52,10 @@ exports.agregarDevolucion = function (req) {
 			}
 			else {
 
-				let query = 'insert into Devoluciones set ?';
+				let query = 'insert into MetodoPago set ?';
 
 				let request_body = {
-          montoSinIVA: body.montoSinIVA,
-          IVA: body.IVA,
-          montoConIVA: body.montoConIVA,
-          tipoDevolucion: body.tipoDevolucion,
-          motivoDevolucion: body.motivoDevolucion,
-          idCliente: body.idCliente
+          tipoPago:body.tipoPago
 				};
 				database.query(query, request_body, function (error, success) {
 					if (error) {
@@ -72,7 +67,7 @@ exports.agregarDevolucion = function (req) {
 					else {
 						resolve({
 							estatus: 1,
-							respuesta: 'Devolución dada de alta correctamente'
+							respuesta: 'Metodo de pago dado de alta correctamente'
 
 						});
 					}
@@ -82,12 +77,12 @@ exports.agregarDevolucion = function (req) {
 	});
 }
 
-//modificar devolución existente
-exports.modificarDevolucion = function (req) {
+//modificar un metodo de pago existente
+exports.modificarMetodoPago = function (req) {
 	return new Promise((resolve, reject) => {
 
 		let body = req.body;
-		let idDevolucion = req.params.idDevolucion;
+		let idMetodoPago = req.params.idMetodoPago;
 		req.getConnection(function (error, database) {
 			if (error) {
 				reject({
@@ -97,15 +92,10 @@ exports.modificarDevolucion = function (req) {
 			}
 			else {
 
-				let query = `update Devoluciones set ? where idDevolucion = '${idDevolucion}'`;
+				let query = `update MetodoPago set ? where idMetodoPago = '${idMetodoPago}'`;
 
 				let request_body = {
-          montoSinIVA: body.montoSinIVA,
-          IVA: body.IVA,
-          montoConIVA: body.montoConIVA,
-          tipoDevolucion: body.tipoDevolucion,
-          motivoDevolucion: body.motivoDevolucion,
-          idCliente: body.idCliente
+        tipoPago:body.tipoPago
 				};
 				database.query(query, request_body, function (error, success) {
 					if (error) {
@@ -117,7 +107,7 @@ exports.modificarDevolucion = function (req) {
 					else {
 						resolve({
 							estatus: 1,
-							respuesta: 'Devolución actualizada correctamente'
+							respuesta: 'Metodo de pago actualizado correctamente'
 
 						});
 					}
@@ -127,11 +117,11 @@ exports.modificarDevolucion = function (req) {
 	});
 }
 
- //eliminar una devolución existente
- exports.eliminarDevolucion = function (req) {
+ //eliminar un metodo de pago existente
+ exports.eliminarMetodoPago = function (req) {
  	return new Promise((resolve, reject) => {
 
- 		let idDevolucion = req.params.idDevolucion;
+ 		let idMetodoPago = req.params.idMetodoPago;
  		req.getConnection(function (error, database) {
  			if (error) {
  				reject({
@@ -141,7 +131,7 @@ exports.modificarDevolucion = function (req) {
  			}
  			else {
 
- 				let query = `update Devoluciones set ? where idDevolucion = '${idDevolucion}'`;
+ 				let query = `update MetodoPago set ? where idMetodoPago = '${idMetodoPago}'`;
 
  				let request_body = {
  					estado: 0
@@ -156,7 +146,8 @@ exports.modificarDevolucion = function (req) {
  					else {
  						resolve({
  							estatus: 1,
- 							respuesta: 'Devolución eliminada correctamente'
+ 							respuesta: 'Metodo de Pago eliminado correctamente'
+
  						});
  					}
  				});

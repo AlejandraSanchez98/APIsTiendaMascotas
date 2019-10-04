@@ -93,7 +93,7 @@ exports.modificarEnvio = function (req) {
 			}
 			else {
 
-				let query = `update Envios set ? where idEnvio = ${idEnvio}`;
+				let query = `update Envios set ? where idEnvio = '${idEnvio}'`;
 
 				let request_body = {
           tipoEnvio:body.tipoEnvio,
@@ -133,7 +133,7 @@ exports.modificarEnvio = function (req) {
  			}
  			else {
 
- 				let query = `update Envios set ? where idEnvio = ${idEnvio}`;
+ 				let query = `update Envios set ? where idEnvio = '${idEnvio}'`;
 
  				let request_body = {
  					estado: 0

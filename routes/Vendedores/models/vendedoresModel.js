@@ -95,7 +95,7 @@ exports.modificarVendedor = function (req) {
 			}
 			else {
 
-				let query = `update Vendedores set ? where idVendedor = ${idVendedor}`;
+				let query = `update Vendedores set ? where idVendedor = '${idVendedor}'`;
 
 				let request_body = {
           nombreVendedor: body.nombreVendedor,
@@ -138,7 +138,7 @@ exports.modificarVendedor = function (req) {
  			}
  			else {
 
- 				let query = `update Vendedores set ? where idVendedor = ${idVendedor}`;
+ 				let query = `update Vendedores set ? where idVendedor = '${idVendedor}'`;
 
  				let request_body = {
  					estado: 0

@@ -1,5 +1,3 @@
-/*modifique los estados y las fechas de las tablas - pendiente modificar la relacion de metodo de pago*/
-/*Modificar en el postman las tablas: envios,clientes,usuarios,productos,metodoPago,accesos*/
 --Crear base de datos
 create database  tiendaMascotas;
 --Usar la base de datos
@@ -65,22 +63,9 @@ fechaRegistro datetime default now(),
 fechaActualizacion datetime default now(),
 idProveedor int,
 idUsuario int,
-numReporte int,
-primary key (idCompra, idProveedor, idUsuario, numReporte),
+primary key (idCompra, idProveedor, idUsuario),
 foreign key (idProveedor) references Proveedores (idProveedor) on delete cascade,
-foreign key (idUsuario) references Usuarios (idUsuario) on delete cascade,
-foreign key (numReporte) references Reportes (numReporte) on delete cascade);
-
-
-create table Reportes(
-numReporte int auto_increment,
-montoTotalVentas numeric (6,2),
-montoTotalCompras numeric (6,2),
-utilidad numeric (6,2),
-fechaRegistro datetime default now(),
-fechaActualizacion datetime default now(),
-estado tinyint(2) default 1,
-primary key (numReporte));
+foreign key (idUsuario) references Usuarios (idUsuario) on delete cascade);
 
 create table Productos(
 idProducto int auto_increment,
@@ -117,12 +102,8 @@ fechaRegistro datetime default now(),
 fechaActualizacion datetime default now(),
 estado tinyint(2) default 1,
 idVendedor int,
-numReporte int,
-idMetodoPago int,
-primary key (idVenta, idVendedor, numReporte, idMetodoPago),
-foreign key (idVendedor) references Vendedores (idVendedor) on delete cascade,
-foreign key (numReporte) references Reportes (numReporte) on delete cascade,
-foreign key (idMetodoPago) references MetodoPago (idMetodoPago) on delete cascade);
+primary key (idVenta, idVendedor),
+foreign key (idVendedor) references Vendedores (idVendedor) on delete cascade);
 
 create table Envios(
 idEnvio int auto_increment,
@@ -131,7 +112,7 @@ descripcion varchar(200),
 fechaRegistro datetime default now(),
 fechaActualizacion datetime default now(),
 estado tinyint(2) default 1,
-primary key (idEnvio));*/
+primary key (idEnvio));
 
 create table DetalleVenta(
 idDetalleVenta int auto_increment,
@@ -198,14 +179,14 @@ foreign key (idProducto) references Productos (idProducto) on delete cascade);
 
 create table productos_ventas(
 idProducto int,
-idVenta int,
-cantidad varchar(15),
+idVenta int  auto_increment,
+cantidadProducto varchar(15),
 primary key (idProducto, idVenta),
 foreign key (idProducto) references Productos (idProducto) on delete cascade,
 foreign key (idVenta) references Ventas (idVenta) on delete cascade);
 
 create table ventas_clientes(
-idVenta int,
+idVenta int auto_increment,
 idCliente int,
 primary key (idVenta, idCliente),
 foreign key (idVenta) references Ventas (idVenta) on delete cascade,
@@ -219,28 +200,12 @@ foreign key (idProducto) references Productos (idProducto) on delete cascade,
 foreign key (idDevolucion) references Devoluciones (idDevolucion) on delete cascade);
 
 create table ventas_metodoPago(
-idVenta int,
+idVenta int auto_increment,
 idMetodoPago int,
 primary key (idVenta, idMetodoPago),
 foreign key (idVenta) references Ventas (idVenta) on delete cascade,
 foreign key (idMetodoPago) references MetodoPago (idMetodoPago) on delete cascade);
 
 
-
---Producto más vendido
-SELECT productos_ventas.idProducto, SUM(productos_ventas.cantidad) AS TotalVentas FROM productos_ventas, Productos GROUP BY productos_ventas.idProducto, Productos.nombreProducto ORDER BY SUM(productos_ventas.cantidad) DESC LIMIT 0 , 5;
-SELECT  pv.idProducto, p.nombreProducto AS Producto, SUM(pv.cantidad) AS TotalVentas FROM productos_ventas pv  INNER JOIN Productos p ON pv.idProducto = p.idProducto WHERE p.estado = 1  GROUP BY pv.idProducto, p.nombreProducto ORDER BY SUM(pv.cantidad)  DESC  LIMIT 0 , 5 ;
-
---Vendedor con mas ventas 
-SELECT  VEND.idVendedor, VEND.nombreVendedor AS Vendedor, SUM(V.montoConIVA) AS ImporteVenta FROM Vendedores VEND  INNER JOIN Ventas V ON VEND.idVendedor = V.idVendedor WHERE V.estado = 1  GROUP BY VEND.idVendedor, VEND.nombreVendedor ORDER BY SUM(V.montoConIVA)  DESC  LIMIT 0 , 5 ;
---Productos con stock minimo
-
-SELECT * FROM Productos WHERE stock <= 5;
-
---Restar el stock segun la cantidad de productos vendidos
-UPDATE Productos INNER JOIN ( SELECT idProducto, SUM(cantidad) cantidad FROM productos_ventas GROUP BY idProducto ) productos_ventas ON Productos.idProducto = productos_ventas.idProducto  SET Productos.stock = Productos.stock - productos_ventas.cantidad WHERE Productos.estado = 1;
-
-
---(funciono) SELECT * FROM Ventas WHERE MONTH(fechaRegistro) < MONTH(CURDATE());
 
 

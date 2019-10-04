@@ -1,6 +1,6 @@
-export function verificarExistenciaToken(req, res, next){
+exports.verificarExistenciaToken=function (req, res, next){
     var headers = req.headers;
-  
+
     if (headers.authorization) {
       /*res.json({
         estatus: 1,
@@ -18,6 +18,5 @@ export function verificarExistenciaToken(req, res, next){
       });
     }
   }
-  
-  
-  export const claveSecreta = '';
+
+  exports.claveSecreta='anannananna';

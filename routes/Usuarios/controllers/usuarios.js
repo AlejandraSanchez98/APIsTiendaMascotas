@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+
 //requerir el modelo
 var usuariosModel = require('../models/usuariosModel');
 

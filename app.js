@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 //var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var loginRouter = require('./routes/Login/controllers/login');
 var categoriaRouter = require('./routes/Categoria/controllers/Categorias');
 var proveedoresRouter = require('./routes/Proveedores/controllers/proveedores');
 var vendedoresRouter = require('./routes/Vendedores/controllers/vendedores');
@@ -57,6 +58,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/login',loginRouter);
 app.use('/categoria', categoriaRouter);
 app.use('/proveedores', proveedoresRouter);
 app.use('/vendedores', vendedoresRouter);

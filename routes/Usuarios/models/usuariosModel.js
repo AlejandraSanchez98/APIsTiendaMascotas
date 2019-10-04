@@ -96,7 +96,7 @@ exports.modificarUsuario = function (req) {
 			}
 			else {
 
-				let query = `update Usuarios set ? where idUsuario = ${idUsuario}`;
+				let query = `update Usuarios set ? where idUsuario = '${idUsuario}'`;
 
 				let request_body = {
           nombreUsuario: body.nombreUsuario,
@@ -139,7 +139,7 @@ exports.modificarUsuario = function (req) {
  			}
  			else {
 
- 				let query = `update Usuarios set ? where idUsuario = ${idUsuario}`;
+ 				let query = `update Usuarios set ? where idUsuario = '${idUsuario}'`;
 
  				let request_body = {
  					estado: 0
