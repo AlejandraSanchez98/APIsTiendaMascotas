@@ -60,8 +60,7 @@ exports.agregarProducto = function (req) {
           precioVenta: body.precioVenta,
           descripcionProducto: body.descripcionProducto,
           stock: body.stock,
-          idCategoria:body.idCategoria,
-          idCompra:body.idCompra
+          idCategoria:body.idCategoria
 				};
 				database.query(query, request_body, function (error, success) {
 					if (error) {
@@ -106,8 +105,7 @@ exports.modificarProducto = function (req) {
           precioVenta: body.precioVenta,
           descripcionProducto: body.descripcionProducto,
           stock: body.stock,
-          idCategoria:body.idCategoria,
-          idCompra:body.idCompra
+          idCategoria:body.idCategoria
 				};
 				database.query(query, request_body, function (error, success) {
 					if (error) {

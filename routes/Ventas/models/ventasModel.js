@@ -54,12 +54,12 @@ exports.agregarVenta = function (req) {
 				let montoSinIVA = req.body.montoSinIVA;
 				let IVA = req.body.IVA;
 				let montoConIVA = req.body.montoConIVA;
-				let idVendedor = req.body.idVendedor;
+				let idUsuario = req.body.idUsuario;
 				let idProducto = req.body.idProducto;
 				let cantidadProducto = req.body.cantidadProducto;
 				let idCliente = req.body.idCliente;
 				let idMetodoPago = req.body.idMetodoPago;
-				let query = `CALL realizarInsercion( ${montoSinIVA},${IVA},${montoConIVA},${idVendedor},${idProducto},${cantidadProducto},${idCliente},${idMetodoPago})`;
+				let query = `CALL realizarInsercion( ${montoSinIVA},${IVA},${montoConIVA},${idUsuario},${idProducto},${cantidadProducto},${idCliente},${idMetodoPago})`;
 
 
 				database.query(query, function (error, success) {

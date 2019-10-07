@@ -1,210 +1,211 @@
 --Crear base de datos
-create database  tiendaMascotas;
+CREATE DATABASE  tiendaMascotas;
 --Usar la base de datos
-use tiendaMascotas;
+USE tiendaMascotas;
 --Creación de tablas
 
-create table Categoria(
-idCategoria  int auto_increment,
-nombreCategoria varchar(50),
-subCategoria varchar(50),
-descripcion varchar(100),
-fechaRegistro datetime default now(),
-fechaActualizacion datetime default now(),
-estado tinyint(2) default 1,
-primary key (idCategoria));
+CREATE TABLE Categoria(
+idCategoria  INT UNSIGNED AUTO_INCREMENT ,
+nombreCategoria VARCHAR(100),
+subCategoria VARCHAR(100),
+descripcion VARCHAR(100),
+fechaRegistro DATETIME DEFAULT NOW(),
+fechaActualizacion DATETIME DEFAULT NOW(),
+estado TINYINT(5) DEFAULT 1,
+PRIMARY KEY (idCategoria));
 
-create table Proveedores(
-idProveedor int auto_increment,
-nombreProveedor varchar(50),
-direccionProveedor varchar(50),
-telefonoProveedor int(10),
-ciudadProveedor varchar(20),
-emailProveedor varchar(30),
-RFCProveedor varchar(15),
-razonSocial varchar(100),
-fechaRegistro datetime default now(),
-fechaActualizacion datetime default now(),
-estado tinyint(2) default 1,
-primary key (idProveedor));
+CREATE TABLE Proveedores(
+idProveedor INT UNSIGNED AUTO_INCREMENT,
+nombreProveedor VARCHAR(100),
+direccionProveedor VARCHAR(100),
+telefonoProveedor VARCHAR(100),
+ciudadProveedor VARCHAR(100),
+emailProveedor VARCHAR(100),
+RFCProveedor VARCHAR(100),
+razonSocial VARCHAR(100),
+fechaRegistro DATETIME DEFAULT NOW(),
+fechaActualizacion DATETIME DEFAULT NOW(),
+estado TINYINT(5) DEFAULT 1,
+PRIMARY KEY (idProveedor));
 
-create table Vendedores(
-idVendedor int auto_increment,
-nombreVendedor varchar(50),
-emailVendedor varchar(30),
-telefonoVendedor int(10),
-direccionVendedor varchar(50),
-ciudadVendedor varchar(20),
-fechaRegistro datetime default now(),
-fechaActualizacion datetime default now(),
-estado tinyint(2) default 1,
-primary key (idVendedor));
-
-create table Usuarios(
-idUsuario int auto_increment,
-nombreUsuario varchar(30),
-correo varchar(100),
+CREATE TABLE Usuarios(
+idUsuario INT UNSIGNED AUTO_INCREMENT,
+nombreUsuario VARCHAR(100),
+telefonoUsuario VARCHAR(100),
+direccionUsuario VARCHAR(100),
+correo VARCHAR(100),
 passwordUsuario BLOB,
-tipoUsuario varchar(20),
-fechaRegistro datetime default now(),
-fechaActualizacion datetime default now(),
-estado tinyint(2) default 1,
-idVendedor int,
-primary key (idUsuario, idVendedor),
-foreign key (idVendedor) references Vendedores (idVendedor));
+tipoUsuario VARCHAR(100),
+fechaRegistro DATETIME DEFAULT NOW(),
+fechaActualizacion DATETIME DEFAULT NOW(),
+estado TINYINT(5) DEFAULT 1,
+PRIMARY KEY (idUsuario));
 
-create table Compras(
-idCompra int auto_increment,
-montoSinIVA numeric (6,2),
-IVA numeric (6,2),
-montoConIVA numeric(6,2),
-estado tinyint(2) default 1,
-fechaRegistro datetime default now(),
-fechaActualizacion datetime default now(),
-idProveedor int,
-idUsuario int,
-primary key (idCompra, idProveedor, idUsuario),
-foreign key (idProveedor) references Proveedores (idProveedor) on delete cascade,
-foreign key (idUsuario) references Usuarios (idUsuario) on delete cascade);
+CREATE TABLE Compras(
+idCompra INT UNSIGNED AUTO_INCREMENT,
+montoSinIVA NUMERIC(7,2) UNSIGNED,
+IVA NUMERIC(7,2) UNSIGNED,
+montoConIVA NUMERIC(7,2) UNSIGNED,
+estado TINYINT(5) DEFAULT 1,
+fechaRegistro DATETIME DEFAULT NOW(),
+fechaActualizacion DATETIME DEFAULT NOW(),
+idProveedor INT UNSIGNED NOT NULL,
+idUsuario INT UNSIGNED NOT NULL,
+PRIMARY KEY (idCompra),
+FOREIGN KEY (idProveedor) REFERENCES Proveedores (idProveedor) ON DELETE CASCADE,
+FOREIGN KEY (idUsuario) REFERENCES Usuarios (idUsuario) ON DELETE CASCADE );
 
-create table Productos(
-idProducto int auto_increment,
-nombreProducto varchar(50),
-precioCompra numeric(6,2),
-precioVenta numeric(6,2),
-descripcionProducto varchar(100),
-stock numeric,
-fechaRegistro datetime default now(),
-fechaActualizacion datetime default now(),
-estado tinyint(2) default 1,
-idCategoria int,
-idCompra int,
-primary key (idProducto, idCategoria, idCompra),
-foreign key (idCategoria) references Categoria (idCategoria) on delete cascade,
-foreign key (idCompra) references Compras (idCompra) on delete cascade);
+CREATE TABLE Productos(
+idProducto INT UNSIGNED AUTO_INCREMENT,
+nombreProducto VARCHAR(100),
+precioCompra NUMERIC(7,2) UNSIGNED,
+precioVenta NUMERIC(7,2) UNSIGNED,
+descripcionProducto VARCHAR(100),
+stock INT UNSIGNED,
+fechaRegistro DATETIME DEFAULT NOW(),
+fechaActualizacion DATETIME DEFAULT NOW(),
+estado TINYINT(5) DEFAULT 1,
+idCategoria INT UNSIGNED NOT NULL,
+PRIMARY KEY (idProducto),
+FOREIGN KEY (idCategoria) REFERENCES Categoria (idCategoria) ON DELETE CASCADE);
 
 
-create table MetodoPago(
-idMetodoPago int auto_increment,
-tipoPago varchar(100),
-fechaRegistro datetime default now(),
-fechaActualizacion datetime default now(),
-estado tinyint(2) default 1,
-primary key (idMetodoPago));
+CREATE TABLE MetodoPago(
+idMetodoPago INT UNSIGNED AUTO_INCREMENT,
+tipoPago VARCHAR(100),
+fechaRegistro DATETIME DEFAULT NOW(),
+fechaActualizacion DATETIME DEFAULT NOW(),
+estado TINYINT(5) DEFAULT 1,
+PRIMARY KEY (idMetodoPago));
 
+CREATE TABLE Ventas(
+idVenta INT UNSIGNED AUTO_INCREMENT,
+montoSinIVA NUMERIC (7,2) UNSIGNED,
+IVA NUMERIC (7,2) UNSIGNED,
+montoConIVA NUMERIC(7,2) UNSIGNED,
+fechaRegistro DATETIME DEFAULT NOW(),
+fechaActualizacion DATETIME DEFAULT NOW(),
+estado TINYINT(5) DEFAULT 1,
+idUsuario INT UNSIGNED NOT NULL,
+PRIMARY KEY (idVenta),
+FOREIGN KEY (idUsuario) REFERENCES Usuarios (idUsuario) ON DELETE CASCADE );
 
-create table Ventas(
-idVenta int auto_increment,
-montoSinIVA numeric (6,2),
-IVA numeric (6,2),
-montoConIVA numeric(6,2),
-fechaRegistro datetime default now(),
-fechaActualizacion datetime default now(),
-estado tinyint(2) default 1,
-idVendedor int,
-primary key (idVenta, idVendedor),
-foreign key (idVendedor) references Vendedores (idVendedor) on delete cascade);
+CREATE TABLE Envios(
+idEnvio INT  UNSIGNED AUTO_INCREMENT,
+tipoEnvio VARCHAR(100),
+descripcion VARCHAR(250),
+fechaRegistro DATETIME DEFAULT NOW(),
+fechaActualizacion DATETIME DEFAULT NOW(),
+estado TINYINT(5) DEFAULT 1,
+PRIMARY KEY (idEnvio));
 
-create table Envios(
-idEnvio int auto_increment,
-tipoEnvio varchar(20),
-descripcion varchar(200),
-fechaRegistro datetime default now(),
-fechaActualizacion datetime default now(),
-estado tinyint(2) default 1,
-primary key (idEnvio));
-
-create table DetalleVenta(
-idDetalleVenta int auto_increment,
-direccion varchar(50),
-ciudad varchar(20),
-observaciones varchar(100),
-fechaRegistro datetime default now(),
-fechaActualizacion datetime default now(),
-estado tinyint(2) default 1,
+CREATE TABLE DetalleVenta(
+idDetalleVenta INT UNSIGNED AUTO_INCREMENT,
+direccion VARCHAR(50),
+ciudad VARCHAR(20),
+observaciones VARCHAR(100),
+fechaRegistro DATETIME DEFAULT NOW(),
+fechaActualizacion DATETIME DEFAULT NOW(),
+estado TINYINT(5) DEFAULT 1,
 idVenta int,
 idEnvio int,
-primary key (idDetalleVenta, idVenta, idEnvio),
-foreign key (idVenta) references Ventas (idVenta) on delete cascade,
-foreign key (idEnvio) references Envios (idEnvio) on delete cascade);
+PRIMARY KEY (idDetalleVenta),
+FOREIGN KEY (idVenta) REFERENCES Ventas (idVenta) ON DELETE CASCADE,
+FOREIGN KEY (idEnvio) REFERENCES Envios (idEnvio) ON DELETE CASCADE);
 
-create table Clientes
-(idCliente int auto_increment,
-nombreCliente varchar(50),
-direccionCliente varchar(50),
-ciudadCliente varchar(20),
-telefonoCliente varchar(10),
-emailCliente varchar(30),
+CREATE TABLE Clientes
+(idCliente INT UNSIGNED AUTO_INCREMENT,
+nombreCliente VARCHAR(100),
+direccionCliente VARCHAR(100),
+ciudadCliente VARCHAR(100),
+telefonoCliente VARCHAR(100),
+emailCliente VARCHAR(100),
 passwordCliente BLOB,
-fechaRegistro datetime default now(),
-fechaActualizacion datetime default now(),
-estado tinyint(2) default 1,
-primary key (idCliente));
+fechaRegistro DATETIME DEFAULT NOW(),
+fechaActualizacion DATETIME DEFAULT NOW(),
+estado TINYINT(5) DEFAULT 1,
+PRIMARY KEY (idCliente));
 
 
-create table Devoluciones(
-idDevolucion int auto_increment,
-fechaDevolucion datetime default now(),
-montoSinIVA numeric(6,2),
-IVA numeric(6,2),
-montoConIVA numeric(6,2),
-tipoDevolucion varchar(250),
-motivoDevolucion varchar(100),
-fechaRegistro datetime default now(),
-fechaActualizacion datetime default now(),
-estado tinyint(2) default 1,
-idCliente int,
-primary key (idDevolucion, idCliente),
-foreign key (idCliente) references Clientes (idCliente) on delete cascade);
+CREATE TABLE Devoluciones(
+idDevolucion INT UNSIGNED AUTO_INCREMENT,
+fechaDevolucion DATETIME DEFAULT NOW(),
+montoSinIVA NUMERIC(7,2) UNSIGNED,
+IVA NUMERIC(7,2) UNSIGNED,
+montoConIVA NUMERIC(7,2) UNSIGNED,
+motivoDevolucion VARCHAR(100),
+fechaRegistro DATETIME DEFAULT NOW(),
+fechaActualizacion DATETIME DEFAULT NOW(),
+estado TINYINT(5) DEFAULT 1,
+idCliente INT UNSIGNED NOT NULL,
+PRIMARY KEY (idDevolucion),
+FOREIGN KEY (idCliente) REFERENCES Clientes (idCliente) ON DELETE CASCADE );
 
 
-create table BitacoraAccesos(
-idAcceso int auto_increment,
-accion varchar(10),
-fechaRegistro datetime default now(),
-fechaActualizacion datetime default now(),
-estado tinyint(2) default 1,
-idUsuario int, 
-primary key (idAcceso),
-foreign key (idUsuario) references Usuarios (idUsuario) on delete cascade);
+CREATE TABLE BitacoraAccesos(
+idAcceso INT UNSIGNED AUTO_INCREMENT,
+accion VARCHAR(100),
+fechaRegistro DATETIME DEFAULT NOW(),
+fechaActualizacion DATETIME DEFAULT NOW(),
+estado TINYINT(5) DEFAULT 1,
+idUsuario INT UNSIGNED NOT NULL, 
+PRIMARY KEY (idAcceso),
+FOREIGN KEY (idUsuario) REFERENCES Usuarios (idUsuario) ON DELETE CASCADE );
 
 
 --Tablas de las relaciones
-create table proveedores_productos(
-idProveedor int,
-idProducto int,
-primary key (idProveedor, idProducto),
-foreign key (idProveedor) references Proveedores (idProveedor) on delete cascade,
-foreign key (idProducto) references Productos (idProducto) on delete cascade);
+CREATE TABLE proveedores_productos(
+idProveedor INT  UNSIGNED NOT NULL,
+idProducto INT UNSIGNED NOT NULL,
+estado TINYINT(5) DEFAULT 1,
+PRIMARY KEY (idProveedor, idProducto),
+FOREIGN KEY (idProveedor) REFERENCES Proveedores (idProveedor) ON DELETE CASCADE ,
+FOREIGN KEY (idProducto) REFERENCES Productos (idProducto) ON DELETE CASCADE );
 
-create table productos_ventas(
-idProducto int,
-idVenta int  auto_increment,
-cantidadProducto varchar(15),
-primary key (idProducto, idVenta),
-foreign key (idProducto) references Productos (idProducto) on delete cascade,
-foreign key (idVenta) references Ventas (idVenta) on delete cascade);
+CREATE TABLE productos_ventas(
+idProducto INT UNSIGNED NOT NULL,
+idVenta INT UNSIGNED  AUTO_INCREMENT,
+cantidadProducto VARCHAR(15),
+estado TINYINT(5) DEFAULT 1,
+PRIMARY KEY (idProducto, idVenta),
+FOREIGN KEY (idProducto) REFERENCES Productos (idProducto) ON DELETE CASCADE ,
+FOREIGN KEY (idVenta) REFERENCES Ventas (idVenta) ON DELETE CASCADE );
 
-create table ventas_clientes(
-idVenta int auto_increment,
-idCliente int,
-primary key (idVenta, idCliente),
-foreign key (idVenta) references Ventas (idVenta) on delete cascade,
-foreign key (idCliente) references Clientes (idCliente) on delete cascade);
+CREATE TABLE ventas_clientes(
+idVenta INT UNSIGNED AUTO_INCREMENT,
+idCliente INT UNSIGNED NOT NULL,
+estado TINYINT(5) DEFAULT 1,
+PRIMARY KEY (idVenta, idCliente),
+FOREIGN KEY (idVenta) REFERENCES Ventas (idVenta) ON DELETE CASCADE ,
+FOREIGN KEY (idCliente) REFERENCES Clientes (idCliente) ON DELETE CASCADE );
 
-create table productos_devoluciones(
-idProducto int,
-idDevolucion int,
-primary key (idProducto, idDevolucion),
-foreign key (idProducto) references Productos (idProducto) on delete cascade,
-foreign key (idDevolucion) references Devoluciones (idDevolucion) on delete cascade);
+CREATE TABLE productos_devoluciones(
+idProducto INT UNSIGNED NOT NULL,
+idDevolucion INT UNSIGNED NOT NULL,
+estado TINYINT(5) DEFAULT 1,
+PRIMARY KEY (idProducto, idDevolucion),
+FOREIGN KEY (idProducto) REFERENCES Productos (idProducto) ON DELETE CASCADE ,
+FOREIGN KEY (idDevolucion) REFERENCES Devoluciones (idDevolucion) ON DELETE CASCADE );
 
-create table ventas_metodoPago(
-idVenta int auto_increment,
-idMetodoPago int,
-primary key (idVenta, idMetodoPago),
-foreign key (idVenta) references Ventas (idVenta) on delete cascade,
-foreign key (idMetodoPago) references MetodoPago (idMetodoPago) on delete cascade);
+CREATE TABLE ventas_metodoPago(
+idVenta INT UNSIGNED AUTO_INCREMENT ,
+idMetodoPago INT UNSIGNED NOT NULL,
+estado TINYINT(5) DEFAULT 1,
+PRIMARY KEY (idVenta, idMetodoPago),
+FOREIGN KEY (idVenta) REFERENCES Ventas (idVenta) ON DELETE CASCADE ,
+FOREIGN KEY (idMetodoPago) REFERENCES MetodoPago (idMetodoPago) ON DELETE CASCADE );
+
+
+
+--obtener el  Monto Total Ventas, Monto Total Compras y Utilidad
+DELIMITER $$
+CREATE PROCEDURE  Utilidad()
+BEGIN
+	SELECT SUM(montoConIVA) AS Total FROM Ventas WHERE estado=1;
+    SELECT SUM(montoConIVA) AS Total FROM Compras WHERE estado=1;
+    SELECT DISTINCT (SELECT SUM(montoConIVA) FROM Ventas WHERE estado=1)-(SELECT SUM(montoConIVA) FROM Compras WHERE estado=1) AS utilidad FROM Ventas, Compras;
+END$$
+CALL Utilidad();
 
 
 

@@ -9,7 +9,7 @@ router.use(function (req, res, next) {
 	next();
 });
 
-//obtener Monto total de las ventas realizadas
+//obtener Monto total de las compras realizadas
 router.get('/calcularMontoTotalCompras', function (req, res, next) {
 	try {
 		//web service

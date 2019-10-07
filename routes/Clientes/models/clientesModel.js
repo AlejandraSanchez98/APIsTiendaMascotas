@@ -9,7 +9,7 @@ exports.listarClientes = function (req) {
 				});
 			}
 			else {
-				var query = 'select * from Clientes where estado = 1';
+				var query = 'SELECT idCliente, nombreCliente, direccionCliente, ciudadCliente, telefonoCliente, emailCliente FROM Clientes where estado = 1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -51,18 +51,15 @@ exports.agregarCliente = function (req) {
 				});
 			}
 			else {
+				let nombreCliente = body.nombreCliente;
+				let direccionCliente = body.direccionCliente;
+				let ciudadCliente = body.ciudadCliente;
+				let telefonoCliente = body.telefonoCliente;
+				let emailCliente = body.emailCliente;
+				let passwordCliente = body.passwordCliente;
 
-				let query = 'insert into Clientes set ?';
-
-				let request_body = {
-          nombreCliente: body.nombreCliente,
-          direccionCliente: body.direccionCliente,
-          ciudadCliente: body.ciudadCliente,
-          telefonoCliente: body.telefonoCliente,
-          emailCliente: body.emailCliente,
-          passwordCliente: body.passwordCliente
-				};
-				database.query(query, request_body, function (error, success) {
+				let query = `INSERT INTO Clientes(nombreCliente, direccionCliente, ciudadCliente, telefonoCliente, emailCliente, passwordCliente) VALUES ('${nombreCliente}', '${direccionCliente}', '${ciudadCliente}', '${telefonoCliente}', '${emailCliente}', SHA2('${passwordCliente}',256))`;
+				database.query(query, function (error, success) {
 					if (error) {
 						reject({
 							estatus: -1,
@@ -96,18 +93,15 @@ exports.modificarCliente = function (req) {
 				});
 			}
 			else {
+				let nombreCliente = body.nombreCliente;
+				let direccionCliente = body.direccionCliente;
+				let ciudadCliente = body.ciudadCliente;
+				let telefonoCliente = body.telefonoCliente;
+				let emailCliente = body.emailCliente;
+				let passwordCliente = body.passwordCliente;
 
-				let query = `update Clientes set ? where idCliente = ' ${idCliente}'`;
-
-				let request_body = {
-          nombreCliente: body.nombreCliente,
-          direccionCliente: body.direccionCliente,
-          ciudadCliente: body.ciudadCliente,
-          telefonoCliente: body.telefonoCliente,
-          emailCliente: body.emailCliente,
-          passwordCliente: body.passwordCliente
-				};
-				database.query(query, request_body, function (error, success) {
+				let query = `UPDATE Clientes SET nombreCliente='${nombreCliente}', direccionCliente ='${direccionCliente}', ciudadCliente ='${ciudadCliente}', telefonoCliente='${telefonoCliente}', emailCliente = '${emailCliente}', passwordCliente=SHA2('${passwordCliente}',256), fechaActualizacion = now() WHERE  idCliente='${idCliente}'`;
+				database.query(query,function (error, success) {
 					if (error) {
 						reject({
 							estatus: -1,

@@ -56,10 +56,11 @@ exports.agregarUsuario = function (req) {
 
 				let request_body = {
           nombreUsuario: body.nombreUsuario,
+					telefonoUsuario: body.telefonoUsuario,
+					direccionUsuario: body. direccionUsuario,
           correo: body.correo,
           passwordUsuario: body.passwordUsuario,
-          tipoUsuario: body.tipoUsuario,
-          idVendedor:body.idVendedor
+          tipoUsuario: body.tipoUsuario
 				};
 				database.query(query, request_body, function (error, success) {
 					if (error) {
@@ -99,11 +100,12 @@ exports.modificarUsuario = function (req) {
 				let query = `update Usuarios set ? where idUsuario = '${idUsuario}'`;
 
 				let request_body = {
-          nombreUsuario: body.nombreUsuario,
-          correo: body.correo,
-          passwordUsuario: body.passwordUsuario,
-          tipoUsuario: body.tipoUsuario,
-          idVendedor:body.idVendedor
+					nombreUsuario: body.nombreUsuario,
+					telefonoUsuario: body.telefonoUsuario,
+					direccionUsuario: body. direccionUsuario,
+					correo: body.correo,
+					passwordUsuario: body.passwordUsuario,
+					tipoUsuario: body.tipoUsuario
 				};
 				database.query(query, request_body, function (error, success) {
 					if (error) {
