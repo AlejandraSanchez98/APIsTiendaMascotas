@@ -90,28 +90,28 @@ idUsuario INT UNSIGNED NOT NULL,
 PRIMARY KEY (idVenta),
 FOREIGN KEY (idUsuario) REFERENCES Usuarios (idUsuario) ON DELETE CASCADE );
 
-CREATE TABLE Envios(
-idEnvio INT  UNSIGNED AUTO_INCREMENT,
-tipoEnvio VARCHAR(100),
+CREATE TABLE viaEnvio(
+idViaEnvio INT  UNSIGNED AUTO_INCREMENT,
+medioEnvio VARCHAR(100),
 descripcion VARCHAR(250),
 fechaRegistro DATETIME DEFAULT NOW(),
 fechaActualizacion DATETIME DEFAULT NOW(),
 estado TINYINT(5) DEFAULT 1,
-PRIMARY KEY (idEnvio));
+PRIMARY KEY (idViaEnvio));
 
-CREATE TABLE DetalleVenta(
-idDetalleVenta INT UNSIGNED AUTO_INCREMENT,
-direccion VARCHAR(50),
-ciudad VARCHAR(20),
+CREATE TABLE Envios(
+idEnvio INT UNSIGNED AUTO_INCREMENT,
+direccion VARCHAR(100),
+ciudad VARCHAR(100),
 observaciones VARCHAR(100),
 fechaRegistro DATETIME DEFAULT NOW(),
 fechaActualizacion DATETIME DEFAULT NOW(),
 estado TINYINT(5) DEFAULT 1,
-idVenta int,
-idEnvio int,
-PRIMARY KEY (idDetalleVenta),
+idVenta INT UNSIGNED NOT NULL,
+idViaEnvio INT UNSIGNED NOT NULL,
+PRIMARY KEY (idEnvio),
 FOREIGN KEY (idVenta) REFERENCES Ventas (idVenta) ON DELETE CASCADE,
-FOREIGN KEY (idEnvio) REFERENCES Envios (idEnvio) ON DELETE CASCADE);
+FOREIGN KEY (idViaEnvio) REFERENCES viaEnvio (idViaEnvio) ON DELETE CASCADE);
 
 CREATE TABLE Clientes
 (idCliente INT UNSIGNED AUTO_INCREMENT,
@@ -126,10 +126,17 @@ fechaActualizacion DATETIME DEFAULT NOW(),
 estado TINYINT(5) DEFAULT 1,
 PRIMARY KEY (idCliente));
 
+CREATE TABLE tipoDevolucion(
+idTipoDevolucion INT UNSIGNED AUTO_INCREMENT,
+tipoDevolucion VARCHAR(250),
+descripcion VARCHAR(250),
+fechaRegistro DATETIME DEFAULT NOW(),
+fechaActualizacion DATETIME DEFAULT NOW(),
+estado TINYINT(5) DEFAULT 1,
+PRIMARY KEY (idTipoDevolucion));
 
 CREATE TABLE Devoluciones(
 idDevolucion INT UNSIGNED AUTO_INCREMENT,
-fechaDevolucion DATETIME DEFAULT NOW(),
 montoSinIVA NUMERIC(7,2) UNSIGNED,
 IVA NUMERIC(7,2) UNSIGNED,
 montoConIVA NUMERIC(7,2) UNSIGNED,
@@ -138,8 +145,12 @@ fechaRegistro DATETIME DEFAULT NOW(),
 fechaActualizacion DATETIME DEFAULT NOW(),
 estado TINYINT(5) DEFAULT 1,
 idCliente INT UNSIGNED NOT NULL,
+idTipoDevolucion INT UNSIGNED NOT NULL,
+idProducto INT UNSIGNED NOT NULL,
 PRIMARY KEY (idDevolucion),
-FOREIGN KEY (idCliente) REFERENCES Clientes (idCliente) ON DELETE CASCADE );
+FOREIGN KEY (idCliente) REFERENCES Clientes (idCliente) ON DELETE CASCADE,
+FOREIGN KEY (idTipoDevolucion) REFERENCES tipoDevolucion (idTipoDevolucion) ON DELETE CASCADE,
+FOREIGN KEY (idProducto) REFERENCES Productos (idProducto) ON DELETE CASCADE);
 
 
 CREATE TABLE BitacoraAccesos(
@@ -154,46 +165,40 @@ FOREIGN KEY (idUsuario) REFERENCES Usuarios (idUsuario) ON DELETE CASCADE );
 
 
 --Tablas de las relaciones
-CREATE TABLE proveedores_productos(
-idProveedor INT  UNSIGNED NOT NULL,
-idProducto INT UNSIGNED NOT NULL,
-estado TINYINT(5) DEFAULT 1,
-PRIMARY KEY (idProveedor, idProducto),
-FOREIGN KEY (idProveedor) REFERENCES Proveedores (idProveedor) ON DELETE CASCADE ,
-FOREIGN KEY (idProducto) REFERENCES Productos (idProducto) ON DELETE CASCADE );
-
 CREATE TABLE productos_ventas(
 idProducto INT UNSIGNED NOT NULL,
-idVenta INT UNSIGNED  AUTO_INCREMENT,
-cantidadProducto VARCHAR(15),
+idVenta INT UNSIGNED  NOT NULL,
+cantidadProducto INT UNSIGNED,
 estado TINYINT(5) DEFAULT 1,
 PRIMARY KEY (idProducto, idVenta),
 FOREIGN KEY (idProducto) REFERENCES Productos (idProducto) ON DELETE CASCADE ,
-FOREIGN KEY (idVenta) REFERENCES Ventas (idVenta) ON DELETE CASCADE );
+FOREIGN KEY (idVenta) REFERENCES Ventas (idVenta) ON DELETE CASCADE);
+
+CREATE TABLE productos_compras(
+idProducto INT UNSIGNED NOT NULL,
+idCompra INT UNSIGNED NOT NULL,
+cantidadProducto INT UNSIGNED,
+estado TINYINT(5) DEFAULT 1,
+PRIMARY KEY (idProducto,idCompra),
+FOREIGN KEY (idProducto) REFERENCES Productos (idProducto) ON DELETE CASCADE ,
+FOREIGN KEY (idCompra) REFERENCES Compras (idCompra) ON DELETE CASCADE);
 
 CREATE TABLE ventas_clientes(
-idVenta INT UNSIGNED AUTO_INCREMENT,
+idVenta INT UNSIGNED NOT NULL,
 idCliente INT UNSIGNED NOT NULL,
 estado TINYINT(5) DEFAULT 1,
 PRIMARY KEY (idVenta, idCliente),
 FOREIGN KEY (idVenta) REFERENCES Ventas (idVenta) ON DELETE CASCADE ,
 FOREIGN KEY (idCliente) REFERENCES Clientes (idCliente) ON DELETE CASCADE );
 
-CREATE TABLE productos_devoluciones(
-idProducto INT UNSIGNED NOT NULL,
-idDevolucion INT UNSIGNED NOT NULL,
-estado TINYINT(5) DEFAULT 1,
-PRIMARY KEY (idProducto, idDevolucion),
-FOREIGN KEY (idProducto) REFERENCES Productos (idProducto) ON DELETE CASCADE ,
-FOREIGN KEY (idDevolucion) REFERENCES Devoluciones (idDevolucion) ON DELETE CASCADE );
-
 CREATE TABLE ventas_metodoPago(
-idVenta INT UNSIGNED AUTO_INCREMENT ,
+idVenta INT UNSIGNED NOT NULL,
 idMetodoPago INT UNSIGNED NOT NULL,
 estado TINYINT(5) DEFAULT 1,
 PRIMARY KEY (idVenta, idMetodoPago),
 FOREIGN KEY (idVenta) REFERENCES Ventas (idVenta) ON DELETE CASCADE ,
 FOREIGN KEY (idMetodoPago) REFERENCES MetodoPago (idMetodoPago) ON DELETE CASCADE );
+
 
 
 
@@ -206,6 +211,24 @@ BEGIN
     SELECT DISTINCT (SELECT SUM(montoConIVA) FROM Ventas WHERE estado=1)-(SELECT SUM(montoConIVA) FROM Compras WHERE estado=1) AS utilidad FROM Ventas, Compras;
 END$$
 CALL Utilidad();
+
+DELIMITER $$
+CREATE PROCEDURE  insertarCompra
+(
+	in montoSinIVA NUMERIC (7,2) UNSIGNED,
+	in IVA NUMERIC (7,2) UNSIGNED ,
+    in montoConIVA NUMERIC(7,2) UNSIGNED,
+    in idProveedor INT UNSIGNED,
+    in idUsuario INT UNSIGNED,
+    in _idProducto INT UNSIGNED,
+    in cantidadProducto INT UNSIGNED
+)
+BEGIN
+	INSERT INTO Compras(montoSinIVA,IVA,montoConIVA,idProveedor, idUsuario) values(montoSinIVA,IVA,montoConIVA,idProveedor,idUsuario);
+    INSERT INTO productos_compras(idProducto,idCompra,cantidadProducto) values(_idProducto,LAST_INSERT_ID(),cantidadProducto);
+    UPDATE Productos SET stock = stock + cantidadProducto WHERE estado = 1 AND  idProducto=_idProducto;
+END
+$$
 
 
 

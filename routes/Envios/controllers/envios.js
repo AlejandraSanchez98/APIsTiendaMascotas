@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 //requerir el modelo
-var enviosModel = require('../models/enviosModel');
+var detalleVentaModel = require('../models/detalleVentaModel');
 
 router.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -9,11 +9,11 @@ router.use(function (req, res, next) {
 	next();
 });
 
-//obtener todos los registos de la tabla envios
-router.get('/listarEnvios', function (req, res, next) {
+//obtener todos los registos de la tabla detalle de venta
+router.get('/listarDetallesVentas', function (req, res, next) {
 	try {
 		//web service
-		enviosModel.listarEnvios(req).then(
+		detalleVentaModel.listarDetallesVentas(req).then(
 			(success) => {
 				res.json(success);
 			},
@@ -27,11 +27,11 @@ router.get('/listarEnvios', function (req, res, next) {
 	}
 });
 
-//Agregar un nuevo envio
-router.post('/agregarEnvio', function (req, res, next) {
+//Agregar un nuevo detalle de venta
+router.post('/agregarDetalleVenta', function (req, res, next) {
 	try {
 		//web service
-		enviosModel.agregarEnvio(req).then(
+		detalleVentaModel.agregarDetalleVenta(req).then(
 			(success) => {
 				res.json(success);
 			},
@@ -45,10 +45,10 @@ router.post('/agregarEnvio', function (req, res, next) {
 	}
 });
 
-//modificar un envio existente
-router.put('/modificarEnvio/:idEnvio', function (req, res, next) {
+//modificar un detalle de venta existente
+router.put('/modificarDetalleVenta/:idDetalleVenta', function (req, res, next) {
 	try {
-		enviosModel.modificarEnvio(req).then(
+		detalleVentaModel.modificarDetalleVenta(req).then(
 			(success) => {
 				res.json(success);
 			},
@@ -62,10 +62,10 @@ router.put('/modificarEnvio/:idEnvio', function (req, res, next) {
 	}
 });
 
-//eliminar un envio existente
-router.delete('/eliminarEnvio/:idEnvio', function (req, res, next) {
+///eliminar un detalle de venta existente
+router.delete('/eliminarDetalleVenta/:idDetalleVenta', function (req, res, next) {
 	try {
-		enviosModel.eliminarEnvio(req).then(
+		detalleVentaModel.eliminarDetalleVenta(req).then(
 			(success) => {
 				res.json(success);
 			},

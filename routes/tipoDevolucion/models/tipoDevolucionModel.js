@@ -1,5 +1,5 @@
-//obtener todos los registos de la tabla metodo de pago
-exports.listarMetodosPago = function (req) {
+//obtener los tipos de devoluciones
+exports.listarTiposDevoluciones = function (req) {
 	return new Promise((resolve, reject) => {
 		req.getConnection(function (error, database) {
 			if (error) {
@@ -9,7 +9,7 @@ exports.listarMetodosPago = function (req) {
 				});
 			}
 			else {
-				var query = 'SELECT idMetodoPago, tipoPago FROM  MetodoPago WHERE estado = 1';
+				var query = 'SELECT idTipoDevolucion, tipoDevolucion, descripcion FROM tipoDevolucion where estado = 1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -38,8 +38,8 @@ exports.listarMetodosPago = function (req) {
 	});
 }
 
-//Agregar un nuevo metodo de pago
-exports.agregarMetodoPago = function (req) {
+//Agregar un nuevo tipo de devolución
+exports.agregarTipoDevolucion = function (req) {
 	return new Promise((resolve, reject) => {
 
 		let body = req.body;
@@ -52,10 +52,11 @@ exports.agregarMetodoPago = function (req) {
 			}
 			else {
 
-				let query = 'insert into MetodoPago set ?';
+				let query = 'insert into tipoDevolucion set ?';
 
 				let request_body = {
-          tipoPago:body.tipoPago
+          tipoDevolucion: body.tipoDevolucion,
+          descripcion: body.descripcion
 				};
 				database.query(query, request_body, function (error, success) {
 					if (error) {
@@ -67,7 +68,7 @@ exports.agregarMetodoPago = function (req) {
 					else {
 						resolve({
 							estatus: 1,
-							respuesta: 'Metodo de pago dado de alta correctamente'
+							respuesta: 'Tipo Devolución dada de alta correctamente'
 
 						});
 					}
@@ -77,12 +78,12 @@ exports.agregarMetodoPago = function (req) {
 	});
 }
 
-//modificar un metodo de pago existente
-exports.modificarMetodoPago = function (req) {
+//modificar tipo de devolución existente
+exports.modificarTipoDevolucion = function (req) {
 	return new Promise((resolve, reject) => {
 
 		let body = req.body;
-		let idMetodoPago = req.params.idMetodoPago;
+		let idTipoDevolucion = req.params.idTipoDevolucion;
 		req.getConnection(function (error, database) {
 			if (error) {
 				reject({
@@ -91,8 +92,10 @@ exports.modificarMetodoPago = function (req) {
 				});
 			}
 			else {
-				let tipoPago = body.tipoPago;
-				let query = `UPDATE MetodoPago set tipoPago = '${tipoPago}', fechaActualizacion = now() WHERE idMetodoPago = '${idMetodoPago}'`;
+        let tipoDevolucion = body.tipoDevolucion;
+        let descripcion = body.descripcion;
+
+				let query = `UPDATE tipoDevolucion SET tipoDevolucion = '${tipoDevolucion}', descripcion = '${descripcion}', fechaActualizacion = now() WHERE idTipoDevolucion = '${idTipoDevolucion}'`;
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -104,7 +107,7 @@ exports.modificarMetodoPago = function (req) {
 					else {
 						resolve({
 							estatus: 1,
-							respuesta: 'Metodo de pago actualizado correctamente'
+							respuesta: 'Tipo Devolución actualizada correctamente'
 
 						});
 					}
@@ -114,11 +117,11 @@ exports.modificarMetodoPago = function (req) {
 	});
 }
 
- //eliminar un metodo de pago existente
- exports.eliminarMetodoPago = function (req) {
+ //eliminar un tipo de  devolución existente
+ exports.eliminarTipoDevolucion = function (req) {
  	return new Promise((resolve, reject) => {
 
- 		let idMetodoPago = req.params.idMetodoPago;
+ 		let idTipoDevolucion = req.params.idTipoDevolucion;
  		req.getConnection(function (error, database) {
  			if (error) {
  				reject({
@@ -128,7 +131,7 @@ exports.modificarMetodoPago = function (req) {
  			}
  			else {
 
- 				let query = `update MetodoPago set ? where idMetodoPago = '${idMetodoPago}'`;
+ 				let query = `update tipoDevolucion set ? where idTipoDevolucion = '${idTipoDevolucion}'`;
 
  				let request_body = {
  					estado: 0
@@ -143,8 +146,7 @@ exports.modificarMetodoPago = function (req) {
  					else {
  						resolve({
  							estatus: 1,
- 							respuesta: 'Metodo de Pago eliminado correctamente'
-
+ 							respuesta: 'Tipo Devolución eliminada correctamente'
  						});
  					}
  				});

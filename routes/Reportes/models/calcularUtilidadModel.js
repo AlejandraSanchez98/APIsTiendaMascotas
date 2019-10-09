@@ -9,7 +9,7 @@ exports.calcularUtilidad = function (req) {
 				});
 			}
 			else {
-				var query = 'SELECT DISTINCT (SELECT SUM(montoConIVA) FROM Ventas WHERE estado=1)-(SELECT SUM(montoConIVA) FROM Compras WHERE estado=1) AS utilidad FROM Ventas, Compras';
+				var query = 'SELECT DISTINCT (SELECT IFNULL(SUM(montoConIVA),0) FROM Ventas WHERE estado=1)-(SELECT IFNULL(SUM(montoConIVA),0) FROM Compras WHERE estado=1) AS utilidad FROM Ventas, Compras';
 
 				database.query(query, function (error, success) {
 					if (error) {

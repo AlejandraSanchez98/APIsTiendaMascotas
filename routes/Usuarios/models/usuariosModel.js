@@ -9,7 +9,7 @@ exports.listarUsuarios = function (req) {
 				});
 			}
 			else {
-				var query = 'select * from Usuarios where estado = 1';
+				var query = 'SELECT idUsuario, nombreUsuario, telefonoUsuario, direccionUsuario, correo, tipoUsuario FROM Usuarios where estado = 1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -51,18 +51,16 @@ exports.agregarUsuario = function (req) {
 				});
 			}
 			else {
+				let nombreUsuario = body.nombreUsuario;
+				let telefonoUsuario = body.telefonoUsuario;
+				let direccionUsuario = body. direccionUsuario;
+				let correo = body.correo;
+				let passwordUsuario = body.passwordUsuario;
+				let tipoUsuario = body.tipoUsuario;
 
-				let query = 'insert into Usuarios set ?';
+				let query = `INSERT INTO Usuarios ( nombreUsuario, telefonoUsuario, direccionUsuario, correo, passwordUsuario, tipoUsuario) VALUES ('${nombreUsuario}', '${telefonoUsuario}', '${direccionUsuario}', '${correo}', SHA2('${passwordUsuario}', 256), '${tipoUsuario}')`;
 
-				let request_body = {
-          nombreUsuario: body.nombreUsuario,
-					telefonoUsuario: body.telefonoUsuario,
-					direccionUsuario: body. direccionUsuario,
-          correo: body.correo,
-          passwordUsuario: body.passwordUsuario,
-          tipoUsuario: body.tipoUsuario
-				};
-				database.query(query, request_body, function (error, success) {
+				database.query(query, function (error, success) {
 					if (error) {
 						reject({
 							estatus: -1,
@@ -96,18 +94,15 @@ exports.modificarUsuario = function (req) {
 				});
 			}
 			else {
+				let nombreUsuario = body.nombreUsuario;
+				let telefonoUsuario = body.telefonoUsuario;
+				let direccionUsuario = body. direccionUsuario;
+				let correo = body.correo;
+				let passwordUsuario = body.passwordUsuario;
+				let tipoUsuario = body.tipoUsuario;
 
-				let query = `update Usuarios set ? where idUsuario = '${idUsuario}'`;
-
-				let request_body = {
-					nombreUsuario: body.nombreUsuario,
-					telefonoUsuario: body.telefonoUsuario,
-					direccionUsuario: body. direccionUsuario,
-					correo: body.correo,
-					passwordUsuario: body.passwordUsuario,
-					tipoUsuario: body.tipoUsuario
-				};
-				database.query(query, request_body, function (error, success) {
+				let query = `update Usuarios set nombreUsuario = '${nombreUsuario}', telefonoUsuario = '${telefonoUsuario}', direccionUsuario = '${direccionUsuario}', correo = '${correo}', passwordUsuario = SHA2('${passwordUsuario}', 256), tipoUsuario = '${tipoUsuario}', fechaActualizacion = now() WHERE idUsuario = '${idUsuario}'`;
+				database.query(query, function (error, success) {
 					if (error) {
 						reject({
 							estatus: -1,

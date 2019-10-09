@@ -9,7 +9,7 @@ exports.listarDevoluciones = function (req) {
 				});
 			}
 			else {
-				var query = 'select * from Devoluciones where estado = 1';
+				var query = 'SELECT d.idDevolucion, d.montoSinIVA, d.IVA, d.montoConIVA, d.motivoDevolucion, c.nombreCliente, td.tipoDevolucion, p.nombreProducto FROM Devoluciones d INNER JOIN  Clientes c  ON d.idCliente = c.idCliente INNER JOIN tipoDevolucion td  ON d.idTipoDevolucion = td.idTipoDevolucion INNER JOIN Productos p ON d.idProducto = p.idProducto WHERE d.estado = 1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -58,9 +58,10 @@ exports.agregarDevolucion = function (req) {
           montoSinIVA: body.montoSinIVA,
           IVA: body.IVA,
           montoConIVA: body.montoConIVA,
-          tipoDevolucion: body.tipoDevolucion,
           motivoDevolucion: body.motivoDevolucion,
-          idCliente: body.idCliente
+          idCliente: body.idCliente,
+					idTipoDevolucion: body.idTipoDevolucion,
+					idProducto: body.idProducto
 				};
 				database.query(query, request_body, function (error, success) {
 					if (error) {
@@ -81,86 +82,3 @@ exports.agregarDevolucion = function (req) {
 		});
 	});
 }
-
-//modificar devolución existente
-exports.modificarDevolucion = function (req) {
-	return new Promise((resolve, reject) => {
-
-		let body = req.body;
-		let idDevolucion = req.params.idDevolucion;
-		req.getConnection(function (error, database) {
-			if (error) {
-				reject({
-					estatus: -1,
-					respuesta: error
-				});
-			}
-			else {
-
-				let query = `update Devoluciones set ? where idDevolucion = '${idDevolucion}'`;
-
-				let request_body = {
-          montoSinIVA: body.montoSinIVA,
-          IVA: body.IVA,
-          montoConIVA: body.montoConIVA,
-          tipoDevolucion: body.tipoDevolucion,
-          motivoDevolucion: body.motivoDevolucion,
-          idCliente: body.idCliente
-				};
-				database.query(query, request_body, function (error, success) {
-					if (error) {
-						reject({
-							estatus: -1,
-							respuesta: error
-						});
-					}
-					else {
-						resolve({
-							estatus: 1,
-							respuesta: 'Devolución actualizada correctamente'
-
-						});
-					}
-				});
-			}
-		});
-	});
-}
-
- //eliminar una devolución existente
- exports.eliminarDevolucion = function (req) {
- 	return new Promise((resolve, reject) => {
-
- 		let idDevolucion = req.params.idDevolucion;
- 		req.getConnection(function (error, database) {
- 			if (error) {
- 				reject({
- 					estatus: -1,
- 					respuesta: error
- 				});
- 			}
- 			else {
-
- 				let query = `update Devoluciones set ? where idDevolucion = '${idDevolucion}'`;
-
- 				let request_body = {
- 					estado: 0
- 				};
- 				database.query(query, request_body, function (error, success) {
- 					if (error) {
- 						reject({
- 							estatus: -1,
- 							respuesta: error
- 						});
- 					}
- 					else {
- 						resolve({
- 							estatus: 1,
- 							respuesta: 'Devolución eliminada correctamente'
- 						});
- 					}
- 				});
- 			}
- 		});
- 	});
- }

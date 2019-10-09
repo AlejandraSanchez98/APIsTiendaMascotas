@@ -9,7 +9,7 @@ exports.listarAccesos = function (req) {
 				});
 			}
 			else {
-				var query = 'select * from BitacoraAccesos where estado = 1';
+				var query = 'SELECT ba.idAcceso, ba.accion, ba.fechaRegistro, u.nombreUsuario FROM BitacoraAccesos ba  INNER JOIN Usuarios u  ON ba.idUsuario=u.idUsuario WHERE ba.estado = 1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -77,83 +77,3 @@ exports.agregarAcceso = function (req) {
 		});
 	});
 }
-
-//modificar un cliente existente
-exports.modificarAcceso = function (req) {
-	return new Promise((resolve, reject) => {
-
-		let body = req.body;
-		let idAcceso = req.params.idAcceso;
-		req.getConnection(function (error, database) {
-			if (error) {
-				reject({
-					estatus: -1,
-					respuesta: error
-				});
-			}
-			else {
-
-				let query = `update BitacoraAccesos set ? where idAcceso = '${idAcceso}'`;
-
-				let request_body = {
-          accion: body.accion,
-          idUsuario: body.idUsuario
-				};
-				database.query(query, request_body, function (error, success) {
-					if (error) {
-						reject({
-							estatus: -1,
-							respuesta: error
-						});
-					}
-					else {
-						resolve({
-							estatus: 1,
-							respuesta: 'Acceso actualizado correctamente'
-
-						});
-					}
-				});
-			}
-		});
-	});
-}
-
- //eliminar un acceso existente
- exports.eliminarAcceso = function (req) {
- 	return new Promise((resolve, reject) => {
-
- 		let idAcceso = req.params.idAcceso;
- 		req.getConnection(function (error, database) {
- 			if (error) {
- 				reject({
- 					estatus: -1,
- 					respuesta: error
- 				});
- 			}
- 			else {
-
- 				let query = `update BitacoraAccesos set ? where idAcceso = '${idAcceso}'`;
-
- 				let request_body = {
- 					estado: 0
- 				};
- 				database.query(query, request_body, function (error, success) {
- 					if (error) {
- 						reject({
- 							estatus: -1,
- 							respuesta: error
- 						});
- 					}
- 					else {
- 						resolve({
- 							estatus: 1,
- 							respuesta: 'Acceso eliminado correctamente'
-
- 						});
- 					}
- 				});
- 			}
- 		});
- 	});
- }

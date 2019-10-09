@@ -9,7 +9,7 @@ exports.listarProveedores = function (req) {
 				});
 			}
 			else {
-				var query = 'select * from Proveedores where estado = 1';
+				var query = 'SELECT idProveedor, nombreProveedor,direccionProveedor,telefonoProveedor,ciudadProveedor,emailProveedor,RFCProveedor,razonSocial FROM Proveedores where estado = 1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -98,18 +98,17 @@ exports.modificarProveedor = function (req) {
 			}
 			else {
 
-				let query = `update Proveedores set ? where idProveedor = '${idProveedor}'`;
+				let nombreProveedor = body.nombreProveedor;
+				let direccionProveedor = body.direccionProveedor;
+				let telefonoProveedor = body.telefonoProveedor;
+				let ciudadProveedor = body.ciudadProveedor;
+				let emailProveedor = body.emailProveedor;
+				let RFCProveedor = body.RFCProveedor;
+				let razonSocial = body.razonSocial;
 
-				let request_body = {
-          nombreProveedor: body.nombreProveedor,
-          direccionProveedor: body.direccionProveedor,
-          telefonoProveedor: body.telefonoProveedor,
-          ciudadProveedor: body.ciudadProveedor,
-          emailProveedor: body.emailProveedor,
-          RFCProveedor: body.RFCProveedor,
-          razonSocial:body.razonSocial,
-				};
-				database.query(query, request_body, function (error, success) {
+				let query = `update Proveedores set nombreProveedor='${nombreProveedor}',direccionProveedor='${direccionProveedor}',telefonoProveedor='${telefonoProveedor}',ciudadProveedor='${ciudadProveedor}',emailProveedor='${emailProveedor}',RFCProveedor='${RFCProveedor}',razonSocial='${razonSocial}', fechaActualizacion = now() where idProveedor = '${idProveedor}'`;
+
+				database.query(query, function (error, success) {
 					if (error) {
 						reject({
 							estatus: -1,

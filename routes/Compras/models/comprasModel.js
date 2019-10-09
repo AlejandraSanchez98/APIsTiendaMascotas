@@ -9,7 +9,7 @@ exports.listarCompras = function (req) {
 				});
 			}
 			else {
-				var query = 'select * from Compras where estado = 1';
+				var query = 'SELECT c.idCompra,c.montoSinIVA,c.IVA,c.montoConIVA,p.nombreProveedor, u.nombreUsuario, pro.nombreProducto, pc.cantidadProducto FROM Compras c INNER JOIN Proveedores p  ON c.idProveedor=p.idProveedor INNER  JOIN Usuarios u  ON c.idUsuario=u.idUsuario INNER JOIN productos_compras pc ON c.idCompra= pc.idCompra INNER JOIN  Productos  pro ON pc.idProducto=pro.idProducto WHERE c.estado=1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -51,17 +51,18 @@ exports.agregarCompra = function (req) {
 				});
 			}
 			else {
+				let montoSinIVA = body.montoSinIVA;
+				let IVA = body.IVA;
+				let montoConIVA = body.montoConIVA;
+				let idProveedor = body.idProveedor;
+				let idUsuario = body.idUsuario;
+				let idProducto = body.idProducto;
+				let cantidadProducto = body.cantidadProducto;
 
-				let query = 'insert into Compras set ?';
+				let query = `CALL insertarCompra('${montoSinIVA}', '${IVA}','${montoConIVA}', '${idProveedor}', '${idUsuario}', '${idProducto}', '${cantidadProducto}')`;
 
-				let request_body = {
-          montoSinIVA: body.montoSinIVA,
-          IVA: body.IVA,
-          montoConIVA: body.montoConIVA,
-          idProveedor: body.idProveedor,
-          idUsuario:body.idUsuario
-				};
-				database.query(query, request_body, function (error, success) {
+
+				database.query(query, function (error, success) {
 					if (error) {
 						reject({
 							estatus: -1,
@@ -80,85 +81,3 @@ exports.agregarCompra = function (req) {
 		});
 	});
 }
-
-//modificar una compra existente
-exports.modificarCompra = function (req) {
-	return new Promise((resolve, reject) => {
-
-		let body = req.body;
-		let idCompra = req.params.idCompra;
-		req.getConnection(function (error, database) {
-			if (error) {
-				reject({
-					estatus: -1,
-					respuesta: error
-				});
-			}
-			else {
-
-				let query = `update Compras set ? where idCompra = '${idCompra}'`;
-
-				let request_body = {
-          montoSinIVA: body.montoSinIVA,
-          IVA: body.IVA,
-          montoConIVA: body.montoConIVA,
-          idProveedor: body.idProveedor,
-          idUsuario:body.idUsuario
-				};
-				database.query(query, request_body, function (error, success) {
-					if (error) {
-						reject({
-							estatus: -1,
-							respuesta: error
-						});
-					}
-					else {
-						resolve({
-							estatus: 1,
-							respuesta: 'Compra actualizada correctamente'
-
-						});
-					}
-				});
-			}
-		});
-	});
-}
-
- //eliminar una compra existente
- exports.eliminarCompra = function (req) {
- 	return new Promise((resolve, reject) => {
-
- 		let idCompra = req.params.idCompra;
- 		req.getConnection(function (error, database) {
- 			if (error) {
- 				reject({
- 					estatus: -1,
- 					respuesta: error
- 				});
- 			}
- 			else {
-
- 				let query = `update Compras set ? where idCompra = '${idCompra}'`;
-
- 				let request_body = {
- 					estado: 0
- 				};
- 				database.query(query, request_body, function (error, success) {
- 					if (error) {
- 						reject({
- 							estatus: -1,
- 							respuesta: error
- 						});
- 					}
- 					else {
- 						resolve({
- 							estatus: 1,
- 							respuesta: 'Compra eliminada correctamente'
- 						});
- 					}
- 				});
- 			}
- 		});
- 	});
- }

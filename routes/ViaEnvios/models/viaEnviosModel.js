@@ -1,5 +1,5 @@
-//obtener todos los registos de la tabla metodo de pago
-exports.listarMetodosPago = function (req) {
+//obtener todos los medios de  envio
+exports.listarMediosEnvios = function (req) {
 	return new Promise((resolve, reject) => {
 		req.getConnection(function (error, database) {
 			if (error) {
@@ -9,7 +9,7 @@ exports.listarMetodosPago = function (req) {
 				});
 			}
 			else {
-				var query = 'SELECT idMetodoPago, tipoPago FROM  MetodoPago WHERE estado = 1';
+				var query = 'SELECT idViaEnvio, medioEnvio, descripcion FROM viaEnvio WHERE estado=1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -38,8 +38,8 @@ exports.listarMetodosPago = function (req) {
 	});
 }
 
-//Agregar un nuevo metodo de pago
-exports.agregarMetodoPago = function (req) {
+//Agregar un nuevo medio de envio
+exports.agregarMedioEnvio = function (req) {
 	return new Promise((resolve, reject) => {
 
 		let body = req.body;
@@ -52,10 +52,11 @@ exports.agregarMetodoPago = function (req) {
 			}
 			else {
 
-				let query = 'insert into MetodoPago set ?';
+				let query = 'insert into viaEnvio set ?';
 
 				let request_body = {
-          tipoPago:body.tipoPago
+          medioEnvio:body.medioEnvio,
+          descripcion:body.descripcion
 				};
 				database.query(query, request_body, function (error, success) {
 					if (error) {
@@ -67,7 +68,7 @@ exports.agregarMetodoPago = function (req) {
 					else {
 						resolve({
 							estatus: 1,
-							respuesta: 'Metodo de pago dado de alta correctamente'
+							respuesta: 'Medio de Envio dado de alta correctamente'
 
 						});
 					}
@@ -77,12 +78,12 @@ exports.agregarMetodoPago = function (req) {
 	});
 }
 
-//modificar un metodo de pago existente
-exports.modificarMetodoPago = function (req) {
+//modificar un medio de envio existente
+exports.modificarMedioEnvio = function (req) {
 	return new Promise((resolve, reject) => {
 
 		let body = req.body;
-		let idMetodoPago = req.params.idMetodoPago;
+		let idViaEnvio = req.params.idViaEnvio;
 		req.getConnection(function (error, database) {
 			if (error) {
 				reject({
@@ -91,9 +92,10 @@ exports.modificarMetodoPago = function (req) {
 				});
 			}
 			else {
-				let tipoPago = body.tipoPago;
-				let query = `UPDATE MetodoPago set tipoPago = '${tipoPago}', fechaActualizacion = now() WHERE idMetodoPago = '${idMetodoPago}'`;
+				let medioEnvio=body.medioEnvio;
+				let descripcion=body.descripcion;
 
+				let query = `UPDATE viaEnvio set  medioEnvio = '${medioEnvio}', descripcion = '${descripcion}', fechaActualizacion = now()  where idViaEnvio = '${idViaEnvio}'`;
 				database.query(query, function (error, success) {
 					if (error) {
 						reject({
@@ -104,7 +106,7 @@ exports.modificarMetodoPago = function (req) {
 					else {
 						resolve({
 							estatus: 1,
-							respuesta: 'Metodo de pago actualizado correctamente'
+							respuesta: 'Medio de Envio actualizado correctamente'
 
 						});
 					}
@@ -114,11 +116,11 @@ exports.modificarMetodoPago = function (req) {
 	});
 }
 
- //eliminar un metodo de pago existente
- exports.eliminarMetodoPago = function (req) {
+ //eliminar un medio de envio existente
+ exports.eliminarMedioEnvio = function (req) {
  	return new Promise((resolve, reject) => {
 
- 		let idMetodoPago = req.params.idMetodoPago;
+ 		let idViaEnvio = req.params.idViaEnvio;
  		req.getConnection(function (error, database) {
  			if (error) {
  				reject({
@@ -128,7 +130,7 @@ exports.modificarMetodoPago = function (req) {
  			}
  			else {
 
- 				let query = `update MetodoPago set ? where idMetodoPago = '${idMetodoPago}'`;
+ 				let query = `update viaEnvio set ? where idViaEnvio = '${idViaEnvio}'`;
 
  				let request_body = {
  					estado: 0
@@ -143,7 +145,7 @@ exports.modificarMetodoPago = function (req) {
  					else {
  						resolve({
  							estatus: 1,
- 							respuesta: 'Metodo de Pago eliminado correctamente'
+ 							respuesta: 'Medio de Envio eliminado correctamente'
 
  						});
  					}

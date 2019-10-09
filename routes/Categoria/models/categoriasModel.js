@@ -9,7 +9,7 @@ exports.listarCategorias = function (req) {
 				});
 			}
 			else {
-				var query = 'select * from Categoria where estado = 1';
+				var query = 'SELECT idCategoria,nombreCategoria,subCategoria,descripcion FROM Categoria where estado = 1;';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -93,15 +93,13 @@ exports.modificarCategoria = function (req) {
 				});
 			}
 			else {
+				let nombreCategoria = body.nombreCategoria;
+				let subCategoria = body.subCategoria;
+				let descripcion = body.descripcion;
 
-				let query = `update Categoria set ? where idCategoria = '${idCategoria}'`;
+				let query = `update Categoria set nombreCategoria= '${nombreCategoria}',subCategoria= '${subCategoria}',descripcion= '${descripcion}', fechaActualizacion = now() where idCategoria = '${idCategoria}'`;
 
-				let request_body = {
-					nombreCategoria: body.nombreCategoria,
-					subCategoria: body.subCategoria,
-					descripcion: body.descripcion
-				};
-				database.query(query, request_body, function (error, success) {
+				database.query(query, function (error, success) {
 					if (error) {
 						reject({
 							estatus: -1,

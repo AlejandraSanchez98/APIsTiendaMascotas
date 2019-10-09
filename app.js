@@ -9,8 +9,7 @@ var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/Login/controllers/login');
 var categoriaRouter = require('./routes/Categoria/controllers/Categorias');
 var proveedoresRouter = require('./routes/Proveedores/controllers/proveedores');
-var vendedoresRouter = require('./routes/Vendedores/controllers/vendedores');
-var enviosRouter = require('./routes/Envios/controllers/envios');
+var viaEnvioRouter = require('./routes/viaEnvios/controllers/viaEnvios');
 var clientesRouter = require('./routes/Clientes/controllers/clientes');
 var usuariosRouter = require('./routes/Usuarios/controllers/usuarios');
 var comprasRouter = require('./routes/Compras/controllers/compras');
@@ -18,7 +17,8 @@ var productosRouter = require('./routes/Productos/controllers/productos');
 var metodoPagoRouter = require('./routes/MetodoPago/controllers/metodoPago');
 var ventasRouter = require('./routes/Ventas/controllers/ventas');
 var accesosRouter = require('./routes/Accesos/controllers/accesos');
-var detalleVentaRouter = require('./routes/DetalleVenta/controllers/detalleVenta');
+//var detalleVentaRouter = require('./routes/DetalleVenta/controllers/detalleVenta');
+var tipoDevolucionRouter = require('./routes/tipoDevolucion/controllers/tipoDevolucion.js')
 var devolucionesRouter = require('./routes/Devoluciones/controllers/devoluciones');
 var montoTotalVentasRouter = require('./routes/Reportes/controllers/montoTotalVentas');
 var montoTotalComprasRouter = require('./routes/Reportes/controllers/montoTotalCompras');
@@ -26,7 +26,6 @@ var utilidadRouter = require('./routes/Reportes/controllers/calcularUtilidad');
 var productosMasVendidosRouter = require('./routes/Reportes/controllers/productosMasVendidos');
 var vendedoresMasVentasRouter = require('./routes/Reportes/controllers/vendedoresMasVentas');
 var productoStockMinimoRouter = require('./routes/Reportes/controllers/productoStockMinimo');
-var restarStockRouter = require('./routes/Productos/controllers/restarStock');
 
 //importar dependencias para poder usar mysql
 var mysqlConnection = require('express-myconnection');
@@ -61,8 +60,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/login',loginRouter);
 app.use('/categoria', categoriaRouter);
 app.use('/proveedores', proveedoresRouter);
-app.use('/vendedores', vendedoresRouter);
-app.use('/envios',enviosRouter);
+app.use('/viaEnvios',viaEnvioRouter);
 app.use('/clientes',clientesRouter);
 app.use('/usuarios',usuariosRouter);
 app.use('/compras', comprasRouter);
@@ -70,7 +68,8 @@ app.use('/productos', productosRouter);
 app.use('/metodoPago', metodoPagoRouter);
 app.use('/ventas',ventasRouter);
 app.use('/accesos',accesosRouter);
-app.use('/detalleVenta',detalleVentaRouter);
+//app.use('/detalleVenta',detalleVentaRouter);
+app.use('/tipoDevolucion', tipoDevolucionRouter);
 app.use('/devoluciones', devolucionesRouter);
 app.use('/montoTotalVentas',montoTotalVentasRouter);
 app.use('/montoTotalCompras',montoTotalComprasRouter);
@@ -78,7 +77,6 @@ app.use('/utilidad',utilidadRouter);
 app.use('/productosMasVendidos',productosMasVendidosRouter);
 app.use('/vendedoresMasVentas',vendedoresMasVentasRouter);
 app.use('/productoStockMinimo', productoStockMinimoRouter);
-app.use('/restarStock',restarStockRouter);
 
 
 //app.use('/', indexRouter);

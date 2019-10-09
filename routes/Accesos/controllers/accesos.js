@@ -44,40 +44,4 @@ router.post('/agregarAcceso', function (req, res, next) {
 		return next(error);
 	}
 });
-
-//modificar un acceso existente
-router.put('/modificarAcceso/:idAcceso', function (req, res, next) {
-	try {
-		accesosModel.modificarAcceso(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
-			}
-		);
-	}
-	catch (error) {
-		return next(error);
-	}
-});
-
-//eliminar un acceso existente
-router.delete('/eliminarAcceso/:idAcceso', function (req, res, next) {
-	try {
-		accesosModel.eliminarAcceso(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
-			}
-		);
-	}
-	catch (error) {
-		return next(error);
-	}
-});
-
-
 module.exports = router;

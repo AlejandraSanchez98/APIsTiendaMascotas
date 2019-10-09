@@ -9,7 +9,7 @@ exports.listarProductos = function (req) {
 				});
 			}
 			else {
-				var query = 'select * from Productos where estado = 1';
+				var query = 'SELECT p.idProducto, p.nombreProducto, p.precioCompra, p.precioVenta, p.descripcionProducto, p.stock, c.nombreCategoria FROM Productos p INNER JOIN Categoria c ON p.idCategoria = c.idCategoria WHERE p.estado = 1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -96,18 +96,16 @@ exports.modificarProducto = function (req) {
 				});
 			}
 			else {
+				let nombreProducto = body.nombreProducto;
+				let precioCompra = body.precioCompra;
+				let precioVenta = body.precioVenta;
+				let descripcionProducto = body.descripcionProducto;
+				let stock = body.stock;
+				let idCategoria = body.idCategoria;
 
-				let query = `update Productos set ? where idProducto = '${idProducto}'`;
+				let query = `UPDATE Productos set  nombreProducto = '${nombreProducto}', precioCompra = '${precioCompra}', precioVenta = '${precioVenta}', descripcionProducto = '${descripcionProducto}', stock= '${stock}', idCategoria = '${idCategoria}', fechaActualizacion = now() WHERE idProducto = '${idProducto}'`;
 
-				let request_body = {
-          nombreProducto: body.nombreProducto,
-          precioCompra: body.precioCompra,
-          precioVenta: body.precioVenta,
-          descripcionProducto: body.descripcionProducto,
-          stock: body.stock,
-          idCategoria:body.idCategoria
-				};
-				database.query(query, request_body, function (error, success) {
+				database.query(query, function (error, success) {
 					if (error) {
 						reject({
 							estatus: -1,

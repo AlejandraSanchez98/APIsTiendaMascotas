@@ -9,7 +9,7 @@ exports.listarEnvios = function (req) {
 				});
 			}
 			else {
-				var query = 'select * from Envios where estado = 1';
+				var query = 'select * from DetalleVenta where estado = 1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -38,8 +38,8 @@ exports.listarEnvios = function (req) {
 	});
 }
 
-//Agregar un nuevo envios
-exports.agregarEnvio = function (req) {
+//Agregar un nuevo detalle de venta
+exports.agregarDetalleVenta = function (req) {
 	return new Promise((resolve, reject) => {
 
 		let body = req.body;
@@ -52,11 +52,14 @@ exports.agregarEnvio = function (req) {
 			}
 			else {
 
-				let query = 'insert into Envios set ?';
+				let query = 'insert into DetalleVenta set ?';
 
 				let request_body = {
-          tipoEnvio:body.tipoEnvio,
-          descripcion:body.descripcion,
+          direccion: body.direccion,
+          ciudad: body.ciudad,
+          observaciones: body.observaciones,
+          idVenta: body.idVenta,
+          idEnvio:body.idEnvio
 				};
 				database.query(query, request_body, function (error, success) {
 					if (error) {
@@ -68,7 +71,7 @@ exports.agregarEnvio = function (req) {
 					else {
 						resolve({
 							estatus: 1,
-							respuesta: 'Envio dado de alta correctamente'
+							respuesta: 'Detalle de venta dado de alta correctamente'
 
 						});
 					}
@@ -78,12 +81,12 @@ exports.agregarEnvio = function (req) {
 	});
 }
 
-//modificar un envio existente
-exports.modificarEnvio = function (req) {
+//modificar un detalle de venta existente
+exports.modificarDetalleVenta = function (req) {
 	return new Promise((resolve, reject) => {
 
 		let body = req.body;
-		let idEnvio = req.params.idEnvio;
+		let idDetalleVenta = req.params.idDetalleVenta;
 		req.getConnection(function (error, database) {
 			if (error) {
 				reject({
@@ -93,11 +96,14 @@ exports.modificarEnvio = function (req) {
 			}
 			else {
 
-				let query = `update Envios set ? where idEnvio = '${idEnvio}'`;
+				let query = `update DetalleVenta set ? where idDetalleVenta = ${idDetalleVenta}`;
 
 				let request_body = {
-          tipoEnvio:body.tipoEnvio,
-          descripcion:body.descripcion
+          direccion: body.direccion,
+          ciudad: body.ciudad,
+          observaciones: body.observaciones,
+          idVenta: body.idVenta,
+          idEnvio:body.idEnvio
 				};
 				database.query(query, request_body, function (error, success) {
 					if (error) {
@@ -109,7 +115,7 @@ exports.modificarEnvio = function (req) {
 					else {
 						resolve({
 							estatus: 1,
-							respuesta: 'Envio actualizado correctamente'
+							respuesta: 'Detalle de venta actualizado correctamente'
 
 						});
 					}
@@ -119,11 +125,11 @@ exports.modificarEnvio = function (req) {
 	});
 }
 
- //eliminar un envio existente
- exports.eliminarEnvio = function (req) {
+ //eliminar un detalle de venta existente
+ exports.eliminarDetalleVenta = function (req) {
  	return new Promise((resolve, reject) => {
 
- 		let idEnvio = req.params.idEnvio;
+ 		let idDetalleVenta = req.params.idDetalleVenta;
  		req.getConnection(function (error, database) {
  			if (error) {
  				reject({
@@ -133,7 +139,7 @@ exports.modificarEnvio = function (req) {
  			}
  			else {
 
- 				let query = `update Envios set ? where idEnvio = '${idEnvio}'`;
+ 				let query = `update DetalleVenta set ? where idDetalleVenta = ${idDetalleVenta}`;
 
  				let request_body = {
  					estado: 0
@@ -148,8 +154,7 @@ exports.modificarEnvio = function (req) {
  					else {
  						resolve({
  							estatus: 1,
- 							respuesta: 'Envio eliminado correctamente'
-
+ 							respuesta: 'Detalle de venta  eliminado correctamente'
  						});
  					}
  				});

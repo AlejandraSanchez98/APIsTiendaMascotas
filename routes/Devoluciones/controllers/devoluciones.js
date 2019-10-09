@@ -45,39 +45,4 @@ router.post('/agregarDevolucion', function (req, res, next) {
 	}
 });
 
-//modificar devolución existente
-router.put('/modificarDevolucion/:idDevolucion', function (req, res, next) {
-	try {
-		devolucionesModel.modificarDevolucion(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
-			}
-		);
-	}
-	catch (error) {
-		return next(error);
-	}
-});
-
-//eliminar una devolución existente
-router.delete('/eliminarDevolucion/:idDevolucion', function (req, res, next) {
-	try {
-		devolucionesModel.eliminarDevolucion(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
-			}
-		);
-	}
-	catch (error) {
-		return next(error);
-	}
-});
-
-
 module.exports = router;
