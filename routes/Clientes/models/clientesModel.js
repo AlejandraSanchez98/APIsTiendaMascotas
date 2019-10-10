@@ -52,13 +52,10 @@ exports.agregarCliente = function (req) {
 			}
 			else {
 				let nombreCliente = body.nombreCliente;
-				let direccionCliente = body.direccionCliente;
-				let ciudadCliente = body.ciudadCliente;
-				let telefonoCliente = body.telefonoCliente;
 				let emailCliente = body.emailCliente;
-				let passwordCliente = body.passwordCliente;
 
-				let query = `INSERT INTO Clientes(nombreCliente, direccionCliente, ciudadCliente, telefonoCliente, emailCliente, passwordCliente) VALUES ('${nombreCliente}', '${direccionCliente}', '${ciudadCliente}', '${telefonoCliente}', '${emailCliente}', SHA2('${passwordCliente}',256))`;
+				 var query = `SELECT * FROM Clientes WHERE (nombreCliente ='${nombreCliente}' or emailCliente='${emailCliente}') and  estado = 1`;
+
 				database.query(query, function (error, success) {
 					if (error) {
 						reject({
@@ -66,10 +63,34 @@ exports.agregarCliente = function (req) {
 							respuesta: error
 						});
 					}
+					if (success.length == 0) {
+						let nombreCliente = body.nombreCliente;
+						let direccionCliente = body.direccionCliente;
+						let ciudadCliente = body.ciudadCliente;
+						let telefonoCliente = body.telefonoCliente;
+						let emailCliente = body.emailCliente;
+						let passwordCliente = body.passwordCliente;
+
+						let query = `INSERT INTO Clientes(nombreCliente, direccionCliente, ciudadCliente, telefonoCliente, emailCliente, passwordCliente) VALUES ('${nombreCliente}', '${direccionCliente}', '${ciudadCliente}', '${telefonoCliente}', '${emailCliente}', SHA2('${passwordCliente}',256))`;
+						database.query(query,function(error,success){
+							if (error) {
+								reject({
+									estatus:-1,
+									respuesta:error
+								});
+							}
+							else {
+								resolve({
+									estatus: 1,
+									respuesta: 'Cliente dado de alta correctamente'
+								});
+							}
+						});
+					}
 					else {
-						resolve({
-							estatus: 1,
-							respuesta: 'Cliente dado de alta correctamente'
+						reject({
+							estatus: -1,
+							respuesta: 'Ya existe este usuario'
 
 						});
 					}

@@ -51,14 +51,11 @@ exports.agregarUsuario = function (req) {
 				});
 			}
 			else {
-				let nombreUsuario = body.nombreUsuario;
-				let telefonoUsuario = body.telefonoUsuario;
-				let direccionUsuario = body. direccionUsuario;
-				let correo = body.correo;
-				let passwordUsuario = body.passwordUsuario;
-				let tipoUsuario = body.tipoUsuario;
 
-				let query = `INSERT INTO Usuarios ( nombreUsuario, telefonoUsuario, direccionUsuario, correo, passwordUsuario, tipoUsuario) VALUES ('${nombreUsuario}', '${telefonoUsuario}', '${direccionUsuario}', '${correo}', SHA2('${passwordUsuario}', 256), '${tipoUsuario}')`;
+				let nombreUsuario = body.nombreUsuario;
+				let correo = body.correo;
+
+				var query = `SELECT * FROM Usuarios where (nombreUsuario ='${nombreUsuario}' or correo='${correo}') and  estado = 1`;
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -67,11 +64,35 @@ exports.agregarUsuario = function (req) {
 							respuesta: error
 						});
 					}
-					else {
-						resolve({
-							estatus: 1,
-							respuesta: 'Usuario dado de alta correctamente'
+					if (success.length == 0) {
+						let nombreUsuario = body.nombreUsuario;
+						let telefonoUsuario = body.telefonoUsuario;
+						let direccionUsuario = body. direccionUsuario;
+						let correo = body.correo;
+						let passwordUsuario = body.passwordUsuario;
+						let tipoUsuario = body.tipoUsuario;
 
+						let query = `INSERT INTO Usuarios ( nombreUsuario, telefonoUsuario, direccionUsuario, correo, passwordUsuario, tipoUsuario) VALUES ('${nombreUsuario}', '${telefonoUsuario}', '${direccionUsuario}', '${correo}', SHA2('${passwordUsuario}', 256), '${tipoUsuario}')`;
+
+						database.query(query, function(error, success){
+							if (error) {
+								reject({
+									estatus: -1,
+									respuesta: error
+								});
+							}
+							else {
+								resolve({
+									estatus: 1,
+									respuesta: 'Usuario dado de alta correctamente'
+								});
+							}
+						});
+					}
+					else {
+						reject({
+							estatus: -1,
+							respuesta: 'Ya existe este usuario'
 						});
 					}
 				});

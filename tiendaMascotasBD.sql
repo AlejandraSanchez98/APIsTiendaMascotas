@@ -206,8 +206,8 @@ FOREIGN KEY (idMetodoPago) REFERENCES MetodoPago (idMetodoPago) ON DELETE CASCAD
 DELIMITER $$
 CREATE PROCEDURE  Utilidad()
 BEGIN
-	SELECT SUM(montoConIVA) AS Total FROM Ventas WHERE estado=1;
-    SELECT SUM(montoConIVA) AS Total FROM Compras WHERE estado=1;
+	SELECT IFNULL(SUM(montoConIVA),0) AS Total FROM Ventas WHERE estado=1;
+    SELECT IFNULL(SUM(montoConIVA),0) AS Total FROM Compras WHERE estado=1;
     SELECT DISTINCT (SELECT SUM(montoConIVA) FROM Ventas WHERE estado=1)-(SELECT SUM(montoConIVA) FROM Compras WHERE estado=1) AS utilidad FROM Ventas, Compras;
 END$$
 CALL Utilidad();

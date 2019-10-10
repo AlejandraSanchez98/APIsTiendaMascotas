@@ -9,7 +9,7 @@ exports.vendedoresMasVentas = function (req) {
 				});
 			}
 			else {
-				var query = 'SELECT  VEND.idVendedor, VEND.nombreVendedor AS Vendedor, SUM(V.montoConIVA) AS ImporteVenta FROM Vendedores VEND  INNER JOIN Ventas V ON VEND.idVendedor = V.idVendedor WHERE V.estado = 1  GROUP BY VEND.idVendedor, VEND.nombreVendedor ORDER BY SUM(V.montoConIVA)  DESC  LIMIT 0 , 5';
+				var query = 'SELECT  u.idUsuario, u.nombreUsuario AS Vendedor, SUM(V.montoConIVA) AS ImporteVenta FROM Usuarios u  INNER JOIN Ventas V ON u.idUsuario = V.idUsuario WHERE V.estado = 1 and u.tipoUsuario="Vendedor"  GROUP BY u.idUsuario, u.nombreUsuario ORDER BY SUM(V.montoConIVA)  DESC  LIMIT 0 , 5';
 
 				database.query(query, function (error, success) {
 					if (error) {

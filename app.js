@@ -20,8 +20,6 @@ var accesosRouter = require('./routes/Accesos/controllers/accesos');
 //var detalleVentaRouter = require('./routes/DetalleVenta/controllers/detalleVenta');
 var tipoDevolucionRouter = require('./routes/tipoDevolucion/controllers/tipoDevolucion.js')
 var devolucionesRouter = require('./routes/Devoluciones/controllers/devoluciones');
-var montoTotalVentasRouter = require('./routes/Reportes/controllers/montoTotalVentas');
-var montoTotalComprasRouter = require('./routes/Reportes/controllers/montoTotalCompras');
 var utilidadRouter = require('./routes/Reportes/controllers/calcularUtilidad');
 var productosMasVendidosRouter = require('./routes/Reportes/controllers/productosMasVendidos');
 var vendedoresMasVentasRouter = require('./routes/Reportes/controllers/vendedoresMasVentas');
@@ -71,8 +69,6 @@ app.use('/accesos',accesosRouter);
 //app.use('/detalleVenta',detalleVentaRouter);
 app.use('/tipoDevolucion', tipoDevolucionRouter);
 app.use('/devoluciones', devolucionesRouter);
-app.use('/montoTotalVentas',montoTotalVentasRouter);
-app.use('/montoTotalCompras',montoTotalComprasRouter);
 app.use('/utilidad',utilidadRouter);
 app.use('/productosMasVendidos',productosMasVendidosRouter);
 app.use('/vendedoresMasVentas',vendedoresMasVentasRouter);
