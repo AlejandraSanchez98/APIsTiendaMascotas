@@ -57,9 +57,10 @@ exports.agregarCompra = function (req) {
 				let idProveedor = body.idProveedor;
 				let idUsuario = body.idUsuario;
 				let idProducto = body.idProducto;
+				let idCompra = body.idCompra;
 				let cantidadProducto = body.cantidadProducto;
 
-				let query = `CALL insertarCompra('${montoSinIVA}', '${IVA}','${montoConIVA}', '${idProveedor}', '${idUsuario}', '${idProducto}', '${cantidadProducto}')`;
+				let query = `CALL insertarCompra('${montoSinIVA}', '${IVA}','${montoConIVA}', '${idProveedor}', '${idUsuario}', '${idProducto}', '${idCompra}', '${cantidadProducto}')`;
 
 
 				database.query(query, function (error, success) {

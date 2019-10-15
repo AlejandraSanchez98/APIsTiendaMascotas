@@ -1,19 +1,20 @@
 var express = require('express');
 var router = express.Router();
 //requerir el modelo
-var detalleVentaModel = require('../models/detalleVentaModel');
+var enviosModel = require('../models/enviosModel');
 
 router.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-headers", "Origin, X-Requested-With, Accept, Content-Type, Authorization");
+	res.header("Access-Control-Allow-Methods: GET, POST");
 	next();
 });
 
-//obtener todos los registos de la tabla detalle de venta
-router.get('/listarDetallesVentas', function (req, res, next) {
+//obtener todos los registos de la tabla envios
+router.get('/listarEnvios', function (req, res, next) {
 	try {
 		//web service
-		detalleVentaModel.listarDetallesVentas(req).then(
+		enviosModel.listarEnvios(req).then(
 			(success) => {
 				res.json(success);
 			},
@@ -27,11 +28,11 @@ router.get('/listarDetallesVentas', function (req, res, next) {
 	}
 });
 
-//Agregar un nuevo detalle de venta
-router.post('/agregarDetalleVenta', function (req, res, next) {
+//Agregar un nuevo Envio
+router.post('/agregarEnvio', function (req, res, next) {
 	try {
 		//web service
-		detalleVentaModel.agregarDetalleVenta(req).then(
+		enviosModel.agregarEnvio(req).then(
 			(success) => {
 				res.json(success);
 			},
@@ -45,27 +46,10 @@ router.post('/agregarDetalleVenta', function (req, res, next) {
 	}
 });
 
-//modificar un detalle de venta existente
-router.put('/modificarDetalleVenta/:idDetalleVenta', function (req, res, next) {
+///eliminar un envio existente
+router.delete('/eliminarEnvio/:idEnvio', function (req, res, next) {
 	try {
-		detalleVentaModel.modificarDetalleVenta(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
-			}
-		);
-	}
-	catch (error) {
-		return next(error);
-	}
-});
-
-///eliminar un detalle de venta existente
-router.delete('/eliminarDetalleVenta/:idDetalleVenta', function (req, res, next) {
-	try {
-		detalleVentaModel.eliminarDetalleVenta(req).then(
+		enviosModel.eliminarEnvio(req).then(
 			(success) => {
 				res.json(success);
 			},

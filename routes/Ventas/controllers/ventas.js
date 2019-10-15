@@ -45,39 +45,4 @@ router.post('/agregarVenta', function (req, res, next) {
 	}
 });
 
-//modificar una venta existente
-router.put('/modificarVenta/:idVenta', function (req, res, next) {
-	try {
-		ventasModel.modificarVenta(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
-			}
-		);
-	}
-	catch (error) {
-		return next(error);
-	}
-});
-
-//eliminar un producto existente
-router.delete('/eliminarVenta/:idVenta', function (req, res, next) {
-	try {
-		ventasModel.eliminarVenta(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
-			}
-		);
-	}
-	catch (error) {
-		return next(error);
-	}
-});
-
-
 module.exports = router;

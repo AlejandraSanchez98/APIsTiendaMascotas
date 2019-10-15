@@ -6,6 +6,7 @@ var comprasModel = require('../models/comprasModel');
 router.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-headers", "Origin, X-Requested-With, Accept, Content-Type, Authorization");
+	res.header("Access-Control-Allow-Methods: GET, POST");
 	next();
 });
 
@@ -45,39 +46,6 @@ router.post('/agregarCompra', function (req, res, next) {
 	}
 });
 
-//modificar una compra existente
-router.put('/modificarCompra/:idCompra', function (req, res, next) {
-	try {
-		comprasModel.modificarCompra(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
-			}
-		);
-	}
-	catch (error) {
-		return next(error);
-	}
-});
-
-//eliminar una compra existente
-router.delete('/eliminarCompra/:idCompra', function (req, res, next) {
-	try {
-		comprasModel.eliminarCompra(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
-			}
-		);
-	}
-	catch (error) {
-		return next(error);
-	}
-});
 
 
 module.exports = router;

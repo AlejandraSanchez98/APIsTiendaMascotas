@@ -210,26 +210,72 @@ BEGIN
     SELECT IFNULL(SUM(montoConIVA),0) AS Total FROM Compras WHERE estado=1;
     SELECT DISTINCT (SELECT SUM(montoConIVA) FROM Ventas WHERE estado=1)-(SELECT SUM(montoConIVA) FROM Compras WHERE estado=1) AS utilidad FROM Ventas, Compras;
 END$$
-CALL Utilidad();
+
 
 DELIMITER $$
-CREATE PROCEDURE  insertarCompra
-(
-	in montoSinIVA NUMERIC (7,2) UNSIGNED,
-	in IVA NUMERIC (7,2) UNSIGNED ,
-    in montoConIVA NUMERIC(7,2) UNSIGNED,
-    in idProveedor INT UNSIGNED,
-    in idUsuario INT UNSIGNED,
-    in _idProducto INT UNSIGNED,
-    in cantidadProducto INT UNSIGNED
+CREATE PROCEDURE insertarVenta(
+IN _montoSinIVA NUMERIC (7,2) UNSIGNED,
+IN _IVA NUMERIC (7,2) UNSIGNED,
+IN _montoConIVA NUMERIC(7,2) UNSIGNED,
+IN _idUsuario INT,
+IN _idProducto INT,
+IN _idVenta INT, 
+IN _cantidadProducto INT UNSIGNED,
+IN _idCliente INT,
+IN _idMetodoPago INT
 )
 BEGIN
-	INSERT INTO Compras(montoSinIVA,IVA,montoConIVA,idProveedor, idUsuario) values(montoSinIVA,IVA,montoConIVA,idProveedor,idUsuario);
-    INSERT INTO productos_compras(idProducto,idCompra,cantidadProducto) values(_idProducto,LAST_INSERT_ID(),cantidadProducto);
-    UPDATE Productos SET stock = stock + cantidadProducto WHERE estado = 1 AND  idProducto=_idProducto;
-END
+IF NOT EXISTS(SELECT idVenta FROM Ventas WHERE idVenta = _idVenta) THEN
+SET _idVenta = (select count(*) as existenciaVentas from Ventas order by idVenta desc limit 1) + 1;
+END IF;
+
+IF _idVenta > (select count(*) as existenciaVentas from Ventas order by idVenta desc limit 1) THEN
+INSERT INTO Ventas(montoSinIVA,IVA,montoConIVA,idUsuario) VALUES (_montoSinIVA,_IVA,_montoConIVA,_idUsuario);
+END IF;
+
+IF NOT EXISTS(SELECT idVenta, idProducto FROM productos_ventas WHERE idVenta = _idVenta AND idProducto = _idProducto) THEN
+INSERT INTO productos_ventas(idProducto,idVenta,cantidadProducto) VALUES (_idProducto,_idVenta,_cantidadProducto);
+UPDATE Productos SET stock = stock - _cantidadProducto WHERE estado = 1 AND  idProducto=_idProducto;
+END IF;
+
+IF NOT EXISTS(SELECT idVenta, idMetodoPago FROM ventas_metodoPago WHERE idVenta = _idVenta AND idMetodoPago = _idMetodoPago) THEN
+INSERT INTO ventas_metodoPago(idVenta,idMetodoPago) VALUES(_idVenta,_idMetodoPago);
+END IF;
+
+IF NOT EXISTS(SELECT idVenta, idCliente FROM ventas_clientes WHERE idVenta = _idVenta AND idCliente = _idCliente) THEN
+IF NOT EXISTS(SELECT idVenta FROM ventas_clientes WHERE idVenta = _idVenta) THEN
+INSERT INTO ventas_clientes(idVenta,idCliente) VALUES(_idVenta,_idCliente);
+END IF;
+END IF;
+END;
 $$
 
 
 
 
+DELIMITER $$
+CREATE PROCEDURE insertarCompra(
+IN _montoSinIVA NUMERIC (7,2) UNSIGNED,
+IN _IVA NUMERIC (7,2) UNSIGNED ,
+IN _montoConIVA NUMERIC(7,2) UNSIGNED,
+IN _idProveedor INT,
+IN _idUsuario INT,
+IN _idProducto INT,
+IN _idCompra INT,
+IN _cantidadProducto INT UNSIGNED
+)
+BEGIN
+IF NOT EXISTS(SELECT idCompra FROM Compras WHERE idCompra = _idCompra) THEN
+SET _idCompra = (select count(*) as existenciaCompras from Compras order by idCompra desc limit 1) + 1;
+END IF;
+
+IF _idCompra > (select count(*) as existenciaCompras from Compras order by idCompra desc limit 1) THEN
+INSERT INTO Compras(montoSinIVA,IVA,montoConIVA,idProveedor, idUsuario) values(_montoSinIVA,_IVA,_montoConIVA,_idProveedor,_idUsuario);
+END IF;
+
+IF NOT EXISTS(SELECT idProducto, idCompra FROM productos_compras WHERE idProducto = _idProducto AND idCompra = _idCompra) THEN 
+INSERT INTO productos_compras(idProducto,idCompra,cantidadProducto) values(_idProducto,_idCompra,_cantidadProducto);
+UPDATE Productos SET stock = stock + _cantidadProducto WHERE estado = 1 AND  idProducto=_idProducto;
+END IF;
+END;
+$$
