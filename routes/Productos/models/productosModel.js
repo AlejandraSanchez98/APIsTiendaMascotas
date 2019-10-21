@@ -9,7 +9,7 @@ exports.listarProductos = function (req) {
 				});
 			}
 			else {
-				var query = 'SELECT p.idProducto, p.nombreProducto, p.precioCompra, p.precioVenta, p.descripcionProducto, p.stock, c.nombreCategoria FROM Productos p INNER JOIN Categoria c ON p.idCategoria = c.idCategoria WHERE p.estado = 1';
+				var query = 'SELECT p.idProducto, p.nombreProducto, p.precioUnitario, p.descripcionProducto, p.stock, c.nombreCategoria FROM Productos p INNER JOIN Categoria c ON p.idCategoria = c.idCategoria WHERE p.estado = 1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -56,8 +56,7 @@ exports.agregarProducto = function (req) {
 
 				let request_body = {
           nombreProducto: body.nombreProducto,
-          precioCompra: body.precioCompra,
-          precioVenta: body.precioVenta,
+          precioUnitario:body.precioUnitario,
           descripcionProducto: body.descripcionProducto,
           stock: body.stock,
           idCategoria:body.idCategoria

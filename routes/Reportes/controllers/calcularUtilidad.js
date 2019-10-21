@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 //requerir el modelo
 var  calcularUtilidadModel= require('../models/calcularUtilidadModel');
+var jwt = require('../../../public/servicios/jwt');
+var jsonWebToken = require('jsonwebtoken');
 
 router.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -12,17 +14,27 @@ router.use(function (req, res, next) {
 });
 
 //obtener utilidad
-router.get('/calcularUtilidad', function (req, res, next) {
+router.get('/calcularUtilidad',jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
 		//web service
-		calcularUtilidadModel.calcularUtilidad(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				calcularUtilidadModel.calcularUtilidad(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);

@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 //requerir el modelo
 var devolucionesModel = require('../models/devolucionesModel');
+var jwt = require('../../../public/servicios/jwt');
+var jsonWebToken = require('jsonwebtoken');
 
 router.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -11,17 +13,27 @@ router.use(function (req, res, next) {
 });
 
 //obtener todas las devoluciones
-router.get('/listarDevoluciones', function (req, res, next) {
+router.get('/listarDevoluciones',jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
 		//web service
-		devolucionesModel.listarDevoluciones(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				devolucionesModel.listarDevoluciones(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);
@@ -29,17 +41,27 @@ router.get('/listarDevoluciones', function (req, res, next) {
 });
 
 //Agregar una nueva devolución
-router.post('/agregarDevolucion', function (req, res, next) {
+router.post('/agregarDevolucion',jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
 		//web service
-		devolucionesModel.agregarDevolucion(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				devolucionesModel.agregarDevolucion(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);

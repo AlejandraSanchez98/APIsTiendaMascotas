@@ -71,16 +71,26 @@ router.post('/agregarProducto',jwt.verificarExistenciaToken, function (req, res,
 });
 
 //modificar un producto existente
-router.put('/modificarProducto/:idProducto', function (req, res, next) {
+router.put('/modificarProducto/:idProducto', jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
-		productosModel.modificarProducto(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				productosModel.modificarProducto(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus:-1,
+					respuesta:"Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);
@@ -88,16 +98,26 @@ router.put('/modificarProducto/:idProducto', function (req, res, next) {
 });
 
 //eliminar un producto existente
-router.delete('/eliminarProducto/:idProducto', function (req, res, next) {
+router.delete('/eliminarProducto/:idProducto', jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
-		productosModel.eliminarProducto(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error, decoded){
+			if (decoded) {
+				productosModel.eliminarProducto(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus:-1,
+					respuesta:"Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);

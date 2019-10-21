@@ -9,7 +9,7 @@ exports.productoStockMinimo = function (req) {
 				});
 			}
 			else {
-				var query = ' SELECT idProducto,nombreProducto,precioCompra,precioVenta,descripcionProducto,stock FROM Productos WHERE stock<=5 AND estado=1';
+				var query = 'SELECT idProducto,nombreProducto,precioUnitario,descripcionProducto,stock FROM Productos WHERE stock<=5 AND estado=1';
 
 				database.query(query, function (error, success) {
 					if (error) {

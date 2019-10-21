@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 //requerir el modelo
 var clientesModel = require('../models/clientesModel');
+var jwt = require('../../../public/servicios/jwt');
+var jsonWebToken = require('jsonwebtoken');
 
 router.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -11,17 +13,27 @@ router.use(function (req, res, next) {
 });
 
 //obtener todos los registos de la tabla clientes
-router.get('/listarClientes', function (req, res, next) {
+router.get('/listarClientes',jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
 		//web service
-		clientesModel.listarClientes(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				clientesModel.listarClientes(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);
@@ -47,16 +59,26 @@ router.post('/agregarCliente', function (req, res, next) {
 });
 
 //modificar un cliente existente
-router.put('/modificarCliente/:idCliente', function (req, res, next) {
+router.put('/modificarCliente/:idCliente', jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
-		clientesModel.modificarCliente(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				clientesModel.modificarCliente(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);
@@ -64,16 +86,26 @@ router.put('/modificarCliente/:idCliente', function (req, res, next) {
 });
 
 //eliminar un cliente existente
-router.delete('/eliminarCliente/:idCliente', function (req, res, next) {
+router.delete('/eliminarCliente/:idCliente',jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
-		clientesModel.eliminarCliente(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				clientesModel.eliminarCliente(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);

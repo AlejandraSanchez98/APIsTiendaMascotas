@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 //requerir el modelo
 var categoriasModel = require('../models/categoriasModel');
+var jwt = require('../../../public/servicios/jwt');
+var jsonWebToken = require('jsonwebtoken');
+
 
 router.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -11,17 +14,27 @@ router.use(function (req, res, next) {
 });
 
 //obtener todos los registos de la tabla Categoria
-router.get('/listarCategorias', function (req, res, next) {
+router.get('/listarCategorias',jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
 		//web service
-		categoriasModel.listarCategorias(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if(decoded){
+				categoriasModel.listarCategorias(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);
@@ -29,17 +42,27 @@ router.get('/listarCategorias', function (req, res, next) {
 });
 
 //Agregar una nueva categoria
-router.post('/agregarCategoria', function (req, res, next) {
+router.post('/agregarCategoria', jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
 		//web service
-		categoriasModel.agregarCategoria(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token, jwt.claveSecreta,function(error, decoded){
+			if (decoded) {
+				categoriasModel.agregarCategoria(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);
@@ -47,16 +70,27 @@ router.post('/agregarCategoria', function (req, res, next) {
 });
 
 //modificar una categoria existente
-router.put('/modificarCategoria/:idCategoria', function (req, res, next) {
+router.put('/modificarCategoria/:idCategoria', jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
-		categoriasModel.modificarCategoria(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if(decoded){
+				categoriasModel.modificarCategoria(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);
@@ -64,16 +98,26 @@ router.put('/modificarCategoria/:idCategoria', function (req, res, next) {
 });
 
 //eliminar un proveedor existente
-router.delete('/eliminarCategoria/:idCategoria', function (req, res, next) {
+router.delete('/eliminarCategoria/:idCategoria', jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
-		categoriasModel.eliminarCategoria(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token, jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				categoriasModel.eliminarCategoria(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);

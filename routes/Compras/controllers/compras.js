@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 //requerir el modelo
 var comprasModel = require('../models/comprasModel');
+var jwt = require('../../../public/servicios/jwt');
+var jsonWebToken = require('jsonwebtoken');
 
 router.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -11,17 +13,27 @@ router.use(function (req, res, next) {
 });
 
 //obtener todos los registos de la tabla compras
-router.get('/listarCompras', function (req, res, next) {
+router.get('/listarCompras',jwt.verificarExistenciaToken,function (req, res, next) {
 	try {
 		//web service
-		comprasModel.listarCompras(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				comprasModel.listarCompras(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);
@@ -29,17 +41,27 @@ router.get('/listarCompras', function (req, res, next) {
 });
 
 //Agregar un nuevo compra
-router.post('/agregarCompra', function (req, res, next) {
+router.post('/agregarCompra',jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
 		//web service
-		comprasModel.agregarCompra(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				comprasModel.agregarCompra(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);

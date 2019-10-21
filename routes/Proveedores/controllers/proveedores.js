@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 //requerir el modelo
 var proveedoresModel = require('../models/proveedoresModel');
+var jwt = require('../../../public/servicios/jwt');
+var jsonWebToken = require('jsonwebtoken');
+
 
 router.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -12,17 +15,27 @@ router.use(function (req, res, next) {
 });
 
 //obtener todos los registos de la tabla proveedores
-router.get('/listarProveedores', function (req, res, next) {
+router.get('/listarProveedores', jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
 		//web service
-		proveedoresModel.listarProveedores(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				proveedoresModel.listarProveedores(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);
@@ -30,17 +43,27 @@ router.get('/listarProveedores', function (req, res, next) {
 });
 
 //Agregar un nuevo proveedor
-router.post('/agregarProveedor', function (req, res, next) {
+router.post('/agregarProveedor',jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
 		//web service
-		proveedoresModel.agregarProveedor(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				proveedoresModel.agregarProveedor(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);
@@ -48,16 +71,27 @@ router.post('/agregarProveedor', function (req, res, next) {
 });
 
 //modificar un proveedor existente
-router.put('/modificarProveedor/:idProveedor', function (req, res, next) {
+router.put('/modificarProveedor/:idProveedor',jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
-		proveedoresModel.modificarProveedor(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				proveedoresModel.modificarProveedor(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);
@@ -65,16 +99,27 @@ router.put('/modificarProveedor/:idProveedor', function (req, res, next) {
 });
 
 //eliminar un proveedor existente
-router.delete('/eliminarProveedor/:idProveedor', function (req, res, next) {
+router.delete('/eliminarProveedor/:idProveedor',jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
-		proveedoresModel.eliminarProveedor(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				proveedoresModel.eliminarProveedor(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);

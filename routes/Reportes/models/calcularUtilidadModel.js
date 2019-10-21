@@ -1,3 +1,4 @@
+
 //obtener utilidad
 exports.calcularUtilidad = function (req) {
 	return new Promise((resolve, reject) => {
@@ -9,7 +10,7 @@ exports.calcularUtilidad = function (req) {
 				});
 			}
 			else {
-				var query = 'SELECT DISTINCT (SELECT IFNULL(SUM(montoConIVA),0) FROM Ventas WHERE estado=1)-(SELECT IFNULL(SUM(montoConIVA),0) FROM Compras WHERE estado=1) AS utilidad FROM Ventas, Compras';
+				var query = 'CALL Utilidad()';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -26,9 +27,14 @@ exports.calcularUtilidad = function (req) {
 							});
 						}
 						else if (success.length > 0) {
+							var array = [];
+							for (var i = 0; i < success.length - 1; i++) {
+								array[i]=success[i];
+							}
 							resolve({
 								estatus: 1,
-								respuesta: success
+								respuesta: array
+
 							});
 						}
 					}

@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 //requerir el modelo
 var  productosMasVendidosModel= require('../models/productosMasVendidosModel');
+var jwt = require('../../../public/servicios/jwt');
+var jsonWebToken = require('jsonwebtoken');
 
 router.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -12,17 +14,27 @@ router.use(function (req, res, next) {
 });
 
 //obtener productos mas vendidos
-router.get('/productosMasVendidos', function (req, res, next) {
+router.get('/productosMasVendidos',jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
 		//web service
-		productosMasVendidosModel.productosMasVendidos(req).then(
-			(success) => {
-				res.json(success);
-			},
-			(error) => {
-				res.json(error);
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				productosMasVendidosModel.productosMasVendidos(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
 			}
-		);
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
 	}
 	catch (error) {
 		return next(error);
