@@ -137,9 +137,7 @@ PRIMARY KEY (idTipoDevolucion));
 
 CREATE TABLE Devoluciones(
 idDevolucion INT UNSIGNED AUTO_INCREMENT,
-montoSinIVA NUMERIC(7,2) UNSIGNED,
-IVA NUMERIC(7,2) UNSIGNED,
-montoConIVA NUMERIC(7,2) UNSIGNED,
+montoDevolucion NUMERIC(7,2) UNSIGNED,
 motivoDevolucion VARCHAR(100),
 fechaRegistro DATETIME DEFAULT NOW(),
 estado TINYINT(5) DEFAULT 1,

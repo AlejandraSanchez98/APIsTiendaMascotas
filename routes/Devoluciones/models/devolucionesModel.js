@@ -9,7 +9,7 @@ exports.listarDevoluciones = function (req) {
 				});
 			}
 			else {
-				var query = 'SELECT d.idDevolucion, d.montoSinIVA, d.IVA, d.montoConIVA, d.motivoDevolucion, c.nombreCliente, td.tipoDevolucion, p.nombreProducto FROM Devoluciones d INNER JOIN  Clientes c  ON d.idCliente = c.idCliente INNER JOIN tipoDevolucion td  ON d.idTipoDevolucion = td.idTipoDevolucion INNER JOIN Productos p ON d.idProducto = p.idProducto WHERE d.estado = 1';
+				var query = 'SELECT d.idDevolucion, d.montoDevolucion, d.montoDevolucion, c.nombreCliente, td.tipoDevolucion, p.nombreProducto FROM Devoluciones d INNER JOIN  Clientes c  ON d.idCliente = c.idCliente INNER JOIN tipoDevolucion td  ON d.idTipoDevolucion = td.idTipoDevolucion INNER JOIN Productos p ON d.idProducto = p.idProducto WHERE d.estado = 1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -55,9 +55,7 @@ exports.agregarDevolucion = function (req) {
 				let query = 'insert into Devoluciones set ?';
 
 				let request_body = {
-          montoSinIVA: body.montoSinIVA,
-          IVA: body.IVA,
-          montoConIVA: body.montoConIVA,
+          montoDevolucion: body.montoDevolucion,
           motivoDevolucion: body.motivoDevolucion,
           idCliente: body.idCliente,
 					idTipoDevolucion: body.idTipoDevolucion,

@@ -71,7 +71,7 @@ exports.agregarCliente = function (req) {
 						let emailCliente = body.emailCliente;
 						let passwordCliente = body.passwordCliente;
 
-						let query = `INSERT INTO Clientes(nombreCliente, direccionCliente, ciudadCliente, telefonoCliente, emailCliente, passwordCliente) VALUES ('${nombreCliente}', '${direccionCliente}', '${ciudadCliente}', '${telefonoCliente}', '${emailCliente}', SHA2('${passwordCliente}',256))`;
+						let query = `INSERT INTO Clientes(nombreCliente, direccionCliente, ciudadCliente, telefonoCliente, emailCliente, passwordCliente) VALUES ('${nombreCliente}', '${direccionCliente}', '${ciudadCliente}', '${telefonoCliente}', '${emailCliente}', '${passwordCliente}')`;
 						database.query(query,function(error,success){
 							if (error) {
 								reject({
@@ -121,7 +121,7 @@ exports.modificarCliente = function (req) {
 				let emailCliente = body.emailCliente;
 				let passwordCliente = body.passwordCliente;
 
-				let query = `UPDATE Clientes SET nombreCliente='${nombreCliente}', direccionCliente ='${direccionCliente}', ciudadCliente ='${ciudadCliente}', telefonoCliente='${telefonoCliente}', emailCliente = '${emailCliente}', passwordCliente=SHA2('${passwordCliente}',256), fechaActualizacion = now() WHERE  idCliente='${idCliente}'`;
+				let query = `UPDATE Clientes SET nombreCliente='${nombreCliente}', direccionCliente ='${direccionCliente}', ciudadCliente ='${ciudadCliente}', telefonoCliente='${telefonoCliente}', emailCliente = '${emailCliente}', passwordCliente='${passwordCliente}', fechaActualizacion = now() WHERE  idCliente='${idCliente}'`;
 				database.query(query,function (error, success) {
 					if (error) {
 						reject({

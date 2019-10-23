@@ -72,7 +72,7 @@ exports.agregarUsuario = function (req) {
 						let passwordUsuario = body.passwordUsuario;
 						let tipoUsuario = body.tipoUsuario;
 
-						let query = `INSERT INTO Usuarios ( nombreUsuario, telefonoUsuario, direccionUsuario, correo, passwordUsuario, tipoUsuario) VALUES ('${nombreUsuario}', '${telefonoUsuario}', '${direccionUsuario}', '${correo}', SHA2('${passwordUsuario}', 256), '${tipoUsuario}')`;
+						let query = `INSERT INTO Usuarios ( nombreUsuario, telefonoUsuario, direccionUsuario, correo, passwordUsuario, tipoUsuario) VALUES ('${nombreUsuario}', '${telefonoUsuario}', '${direccionUsuario}', '${correo}', '${passwordUsuario}', '${tipoUsuario}')`;
 
 						database.query(query, function(error, success){
 							if (error) {
@@ -122,7 +122,7 @@ exports.modificarUsuario = function (req) {
 				let passwordUsuario = body.passwordUsuario;
 				let tipoUsuario = body.tipoUsuario;
 
-				let query = `update Usuarios set nombreUsuario = '${nombreUsuario}', telefonoUsuario = '${telefonoUsuario}', direccionUsuario = '${direccionUsuario}', correo = '${correo}', passwordUsuario = SHA2('${passwordUsuario}', 256), tipoUsuario = '${tipoUsuario}', fechaActualizacion = now() WHERE idUsuario = '${idUsuario}'`;
+				let query = `update Usuarios set nombreUsuario = '${nombreUsuario}', telefonoUsuario = '${telefonoUsuario}', direccionUsuario = '${direccionUsuario}', correo = '${correo}', passwordUsuario = '${passwordUsuario}', tipoUsuario = '${tipoUsuario}', fechaActualizacion = now() WHERE idUsuario = '${idUsuario}'`;
 				database.query(query, function (error, success) {
 					if (error) {
 						reject({
