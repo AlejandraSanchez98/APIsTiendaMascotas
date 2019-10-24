@@ -62,15 +62,14 @@ exports.agregarVenta = function (req) {
 			let montoConIVA=0;
 			let cambio=0;
 			let arregloResultados= [];
+			let arregloProductosNoExistencia=[];
+			let ventaInsertada = false;
 
 			let promesaOperaciones = function(){
 				return new Promise((resolve,reject) => {
-					for (let i = 0; i < productos.length; i++) {
-						cantidadTotalProductos = cantidadTotalProductos + productos[i].cantidadProductos;
-					}
 
-					for (let i = 0; i < productos.length; i++) {
-						let query = `SELECT precioUnitario FROM Productos WHERE idProducto = ${productos[i].idProducto}`;
+					for (let j = 0; j < productos.length; j++) {
+						let query = `SELECT precioUnitario, stock FROM Productos WHERE idProducto = ${productos[j].idProducto}`;
 						database.query(query, function (error, success) {
 							if (error) {
 								reject({
@@ -79,9 +78,12 @@ exports.agregarVenta = function (req) {
 								});
 								return;
 							}
-							montoSinIVA = montoSinIVA + ((success[0].precioUnitario * productos[i].cantidadProductos))/1.16;
+							if(productos[j].cantidadProductos < success[0].stock){
+								montoSinIVA = montoSinIVA + ((success[0].precioUnitario * productos[j].cantidadProductos))/1.16;
+								cantidadTotalProductos = cantidadTotalProductos + productos[j].cantidadProductos;
+							}
 
-							if (i==productos.length -1 ) {
+							if (j==productos.length -1) {
 								IVA = montoSinIVA * .16;
 								montoConIVA = montoSinIVA + IVA;
 								cambio = pago - montoConIVA;
@@ -94,83 +96,110 @@ exports.agregarVenta = function (req) {
 				});
 			}
 
-
 			promesaOperaciones().then(
 				(success) => {
 
-					for (var j = 0; j < array.length; j++) {// se agrego este for para comprobar el stock y hacer un if para que no se pidan mas poductos de los que hay en existencia --de salir esto hacer lo mismo con el cambio esto es una prueba despues de a ver analizado donde era conveniente poner este for recomiento dar push luego luego llegando por si la riegas 
-						let query = `INSERT INTO Ventas(montoSinIVA,IVA,montoConIVA,cantidadTotalProductos,pago,cambio,idUsuario,idCliente) VALUES ('${montoSinIVA}','${IVA}','${montoConIVA}','${cantidadTotalProductos}','${pago}','${cambio}', '${idUsuario}','${idCliente}')`;
-						database.query(query, function (error, success) {
+					for (let i = 0; i < productos.length; i++) {
+						let queryS = `SELECT stock FROM Productos WHERE idProducto = ${productos[i].idProducto}`;
+						database.query(queryS, function (error, stockProductos) {
 							if (error) {
 								reject({
 									estatus: -1,
-									respuesta: error
+									respuesta:error
 								});
-							}
-							else {
-								resolve({
-									estatus: 1,
-									respuesta: 'Venta dada de alta correctamente'
-								});
+							}else {
+								if (productos[i].cantidadProductos < stockProductos[0].stock ) {
+
+									if (ventaInsertada == false) {
+										ventaInsertada = true;
+										console.log("el producto con id: ", productos[i].idProducto, " SI fue insertado");
+
+										let queryIV = `INSERT INTO Ventas(montoSinIVA,IVA,montoConIVA,cantidadTotalProductos,pago,cambio,idUsuario,idCliente) values ('${montoSinIVA}','${IVA}','${montoConIVA}','${cantidadTotalProductos}','${pago}','${cambio}', '${idUsuario}','${idCliente}')`;
+										database.query(queryIV, function (error, success) {
+											if (error) {
+												reject({
+													estatus: -1,
+													respuesta: error
+												});
+											}
+											else {
+												resolve({
+													estatus: 1,
+													respuesta: 'Venta dada de alta correctamente'
+												});
+											}
+										});
+									}
+
+
+									let queryVP = `INSERT INTO ventas_productos(idVenta,idProducto,cantidadProducto) VALUES (LAST_INSERT_ID() ,'${productos[i].idProducto}','${productos[i].cantidadProductos}')`;
+									database.query(queryVP, function (error, success) {
+										if (error) {
+											reject({
+												estatus: -1,
+												respuesta: error
+											});
+										}
+										else {
+											resolve({
+												estatus: 1,
+												respuesta: 'Venta  dada de alta correctamente'
+											});
+										}
+									});
+
+
+
+									let queryU = `UPDATE Productos SET stock = stock - '${productos[i].cantidadProductos}' WHERE idProducto= '${productos[i].idProducto}'`;
+									database.query(queryU, function (error, success) {
+										if (error) {
+											reject({
+												estatus: -1,
+												respuesta: error
+											});
+										}
+										else {
+											resolve({
+												estatus: 1,
+												respuesta: 'Venta  dada de alta correctamente'
+											});
+										}
+									});
+
+									for (let j = 0; j < metodoPago.length; j++) {
+										let queryVM = `INSERT INTO ventas_metodoPago(idVenta,idMetodoPago) VALUES (LAST_INSERT_ID(),'${metodoPago[j].idMetodoPago}')`;
+										database.query(queryVM, function (error, success) {
+											if (error) {
+												reject({
+													estatus: -1,
+													respuesta: error
+												});
+											}
+											else {
+												resolve({
+													estatus: 1,
+													respuesta: 'Venta dada de alta correctamente'
+												});
+											}
+										});
+									}
+								}
+								else {
+									arregloProductosNoExistencia[i]="El producto con id: "+productos[i].idProducto + " tiene " + stockProductos[0].stock +" unidades disponibles";
+
+									if (i ==productos.length - 1) {
+										reject({
+											estatus:1,
+											respuesta:"No se tiene esa cantidad de productos"+arregloProductosNoExistencia
+										});
+									}
+								}
 							}
 						});
-
-
-						for (let i = 0; i < productos.length; i++) {
-							let queryVP = `INSERT INTO ventas_productos(idVenta,idProducto,cantidadProducto) VALUES (LAST_INSERT_ID() ,'${productos[i].idProducto}','${productos[i].cantidadProductos}')`;
-							database.query(queryVP, function (error, success) {
-								if (error) {
-									reject({
-										estatus: -1,
-										respuesta: error
-									});
-								}
-								else {
-									resolve({
-										estatus: 1,
-										respuesta: 'Venta  dada de alta correctamente'
-									});
-								}
-							});
-
-							let queryU = `UPDATE Productos SET stock = stock - '${productos[i].cantidadProductos}' WHERE idProducto= '${productos[i].idProducto}'`;
-							database.query(queryU, function (error, success) {
-								if (error) {
-									reject({
-										estatus: -1,
-										respuesta: error
-									});
-								}
-								else {
-									resolve({
-										estatus: 1,
-										respuesta: 'Venta  dada de alta correctamente'
-									});
-								}
-							});
-						}
-
-						for (let i = 0; i < metodoPago.length; i++) {
-							let query = `INSERT INTO ventas_metodoPago(idVenta,idMetodoPago) VALUES (LAST_INSERT_ID(),'${metodoPago[i].idMetodoPago}')`;
-							database.query(query, function (error, success) {
-								if (error) {
-									reject({
-										estatus: -1,
-										respuesta: error
-									});
-								}
-								else {
-									resolve({
-										estatus: 1,
-										respuesta: 'Venta dada de alta correctamente'
-									});
-								}
-							});
-						}
 					}
 				},
 				(error) => {
-					console.log("Error" , error);
+					console.log("error: ",error);
 				});//fin promesa
 			});
 		});
