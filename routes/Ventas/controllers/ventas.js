@@ -42,6 +42,61 @@ router.get('/listarVentas',jwt.verificarExistenciaToken, function (req, res, nex
 	}
 });
 
+router.get('/listarVentasDetalles/:idVenta',jwt.verificarExistenciaToken, function (req, res, next) {
+	try {
+		//web service
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				ventasModel.listarVentasDetalles(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
+			}
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
+	}
+	catch (error) {
+		return next(error);
+	}
+});
+
+router.get('/listarVentasSinDetalles',jwt.verificarExistenciaToken, function (req, res, next) {
+	try {
+		//web service
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				ventasModel.listarVentasSinDetalles(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
+			}
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
+	}
+	catch (error) {
+		return next(error);
+	}
+});
+
+
 //Agregar una nueva venta
 router.post('/agregarVenta',jwt.verificarExistenciaToken, function (req, res, next) {
 	try {

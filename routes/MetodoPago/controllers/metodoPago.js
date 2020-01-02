@@ -40,6 +40,35 @@ router.get('/listarMetodosPago',jwt.verificarExistenciaToken, function (req, res
 	}
 });
 
+//obtener todos los registos de la tabla metodo de pago por ID
+router.get('/listarMetodosPagoPorID/:idMetodoPago',jwt.verificarExistenciaToken, function (req, res, next) {
+	try {
+		//web service
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				metodoPagoModel.listarMetodosPagoPorID(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
+			}
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
+	}
+	catch (error) {
+		return next(error);
+	}
+});
+
+
 //Agregar un nuevo metodo de pago
 router.post('/agregarMetodoPago',jwt.verificarExistenciaToken, function (req, res, next) {
 	try {

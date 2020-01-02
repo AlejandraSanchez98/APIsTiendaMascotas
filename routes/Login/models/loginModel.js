@@ -15,7 +15,7 @@ exports.verificarUsuario  = function (req) {
 			else {
         let nombreUsuario= body.nombreUsuario;
         let passwordUsuario= body.passwordUsuario;
-				var query = `SELECT * FROM Usuarios WHERE nombreUsuario= '${nombreUsuario}' AND passwordUsuario='${passwordUsuario}' AND estado=1`;
+				var query = `SELECT * FROM Usuarios WHERE nombreUsuario= '${nombreUsuario}' AND passwordUsuario='${passwordUsuario}' AND  estado=1`;
 
 				database.query(query, function (error, success) {
           if (error) {

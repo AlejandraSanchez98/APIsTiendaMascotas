@@ -9,7 +9,7 @@ exports.listarAccesos = function (req) {
 				});
 			}
 			else {
-				var query = 'SELECT ba.idAcceso, ba.accion, ba.fechaRegistro, u.nombreUsuario FROM BitacoraAccesos ba  INNER JOIN Usuarios u  ON ba.idUsuario=u.idUsuario WHERE ba.estado = 1';
+				var query = 'SELECT ba.idAcceso, ba.accion, ba.fechaRegistro, u.nombreUsuario FROM BitacoraAccesos ba  INNER JOIN Usuarios u  ON ba.idUsuario=u.idUsuario WHERE ba.estado = 1 ORDER BY idAcceso ASC';
 
 				database.query(query, function (error, success) {
 					if (error) {

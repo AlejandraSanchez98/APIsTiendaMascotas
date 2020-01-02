@@ -96,13 +96,12 @@ exports.modificarProducto = function (req) {
 			}
 			else {
 				let nombreProducto = body.nombreProducto;
-				let precioCompra = body.precioCompra;
-				let precioVenta = body.precioVenta;
+				let precioUnitario = body.precioUnitario;
 				let descripcionProducto = body.descripcionProducto;
 				let stock = body.stock;
 				let idCategoria = body.idCategoria;
 
-				let query = `UPDATE Productos set  nombreProducto = '${nombreProducto}', precioCompra = '${precioCompra}', precioVenta = '${precioVenta}', descripcionProducto = '${descripcionProducto}', stock= '${stock}', idCategoria = '${idCategoria}', fechaActualizacion = now() WHERE idProducto = '${idProducto}'`;
+				let query = `UPDATE Productos set  nombreProducto = '${nombreProducto}', precioUnitario = '${precioUnitario}', descripcionProducto = '${descripcionProducto}', stock= '${stock}', idCategoria = '${idCategoria}', fechaActualizacion = now() WHERE idProducto = '${idProducto}'`;
 
 				database.query(query, function (error, success) {
 					if (error) {

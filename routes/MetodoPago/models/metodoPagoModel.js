@@ -9,7 +9,7 @@ exports.listarMetodosPago = function (req) {
 				});
 			}
 			else {
-				var query = 'SELECT idMetodoPago, tipoPago FROM  MetodoPago WHERE estado = 1';
+				var query = 'SELECT idMetodoPago, tipoPago FROM  metodoPago WHERE estado = 1';
 
 				database.query(query, function (error, success) {
 					if (error) {
@@ -37,6 +37,50 @@ exports.listarMetodosPago = function (req) {
 		});
 	});
 }
+
+
+//obtener todos los registos de la tabla metodo de pago por id
+exports.listarMetodosPagoPorID = function (req) {
+	return new Promise((resolve, reject) => {
+		let idMetodoPago = req.params.idMetodoPago;
+		req.getConnection(function (error, database) {
+			if (error) {
+				reject({
+					estatus: -1,
+					respuesta: error
+				});
+			}
+			else {
+				var query = `SELECT * FROM  metodoPago WHERE idMetodoPago='${idMetodoPago}' AND estado = 1`;
+
+				database.query(query, function (error, success) {
+					if (error) {
+						reject({
+							estatus: -1,
+							respuesta: error
+						});
+					}
+					else {
+						if (success.length == 0) {
+							resolve({
+								estatus: 0,
+								respuesta: success
+							});
+						}
+						else if (success.length > 0) {
+							resolve({
+								estatus: 1,
+								respuesta: success
+							});
+						}
+					}
+				});
+			}
+		});
+	});
+}
+
+
 
 //Agregar un nuevo metodo de pago
 exports.agregarMetodoPago = function (req) {

@@ -43,6 +43,37 @@ router.get('/listarUsuarios', jwt.verificarExistenciaToken, function (req, res, 
 	}
 });
 
+
+
+//obtener los usuarios por nombre
+router.post('/listarUsuariosPornombre', jwt.verificarExistenciaToken, function (req, res, next) {
+	try {
+		//web service
+		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
+			if (decoded) {
+				usuariosModel.listarUsuariosPornombre(req).then(
+					(success) => {
+						res.json(success);
+					},
+					(error) => {
+						res.json(error);
+					}
+				);
+			}
+			else if (error) {
+				res.json({
+					estatus: -1,
+					respuesta: "Token incorrecto, vuelve a intentarlo"
+				});
+			}
+		});
+	}
+	catch (error) {
+		return next(error);
+	}
+});
+
+
 //Agregar un nuevo usuario
 router.post('/agregarUsuario', jwt.verificarExistenciaToken, function (req, res, next) {
 	try {

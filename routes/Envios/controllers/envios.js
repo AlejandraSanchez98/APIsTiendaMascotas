@@ -69,7 +69,7 @@ router.post('/agregarEnvio',jwt.verificarExistenciaToken, function (req, res, ne
 	}
 });
 
-///eliminar un envio existente
+//eliminar un envio existente
 router.delete('/eliminarEnvio/:idEnvio',jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
 		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){

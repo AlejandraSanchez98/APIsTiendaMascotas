@@ -97,7 +97,7 @@ router.put('/modificarCategoria/:idCategoria', jwt.verificarExistenciaToken, fun
 	}
 });
 
-//eliminar un proveedor existente
+//eliminar una categoria existente
 router.delete('/eliminarCategoria/:idCategoria', jwt.verificarExistenciaToken, function (req, res, next) {
 	try {
 		jsonWebToken.verify(req.token, jwt.claveSecreta,function(error,decoded){
