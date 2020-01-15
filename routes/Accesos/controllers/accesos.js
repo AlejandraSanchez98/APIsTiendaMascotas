@@ -42,27 +42,17 @@ router.get('/listarAccesos',jwt.verificarExistenciaToken, function (req, res, ne
 });
 
 //Agregar un nuevo acceso
-router.post('/agregarAcceso', jwt.verificarExistenciaToken, function (req, res, next) {
+router.post('/agregarAcceso',function (req, res, next) {
 	try {
 		//web service
-		jsonWebToken.verify(req.token,jwt.claveSecreta,function(error,decoded){
-			if (decoded) {
-				accesosModel.agregarAcceso(req).then(
-					(success) => {
-						res.json(success);
-					},
-					(error) => {
-						res.json(error);
-					}
-				);
+		accesosModel.agregarAcceso(req).then(
+			(success) => {
+				res.json(success);
+			},
+			(error) => {
+				res.json(error);
 			}
-			else if (error) {
-				res.json({
-					estatus: -1,
-					respuesta: "Token incorrecto, vuelve a intentarlo"
-				});
-			}
-		});
+		);
 	}
 	catch (error) {
 		return next(error);

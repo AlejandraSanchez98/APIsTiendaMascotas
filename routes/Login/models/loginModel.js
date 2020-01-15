@@ -40,7 +40,7 @@ exports.verificarUsuario  = function (req) {
               };
               jsonWebToken.sign(payload,jwt.claveSecreta,function(error,token){
                 if(token){
-                  console.log("tu token es: ", token);
+                  console.log("tu token generado en el login es: ", token);
                   resolve({
                     estatus: 1,
                     respuesta: token
